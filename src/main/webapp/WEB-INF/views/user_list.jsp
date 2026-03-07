@@ -224,8 +224,10 @@
                                     <div class="product-name">${user.hoTen}</div>
                                 </td>
                                 <td>
-                                    <img src="${pageContext.request.contextPath}/${user.anhDaiDien}"
-                                         class="product-image" alt="${user.hoTen}">
+                                    <c:set var="avatarSrc" value="${not empty user.anhDaiDien ? user.anhDaiDien : 'resources/images/users-icon.jpg'}"/>
+                                    <img src="${pageContext.request.contextPath}/${avatarSrc}"
+                                         class="product-image" alt="${user.hoTen}"
+                                         onerror="this.src='${pageContext.request.contextPath}/resources/images/users-icon.jpg'">
                                 </td>
                                 <td>
                                     <div class="product-name">${user.email}</div>
@@ -258,6 +260,7 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let isLoading = false;
