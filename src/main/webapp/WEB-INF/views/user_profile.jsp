@@ -81,79 +81,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
     </style>
   </head>
   <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-      <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-          <i class="fas fa-mug-hot"></i> Milk Tea Shop
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="${pageContext.request.contextPath}/product/view"
-              >
-                <i class="fas fa-box"></i> Quản lý sản phẩm
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="${pageContext.request.contextPath}/category/view"
-              >
-                <i class="fas fa-folder"></i> Quản lý danh mục
-              </a>
-            </li>
-          </ul>
-          <div class="nav-item dropdown">
-            <a
-			  class="nav-link dropdown-toggle d-flex align-items-center"
-			  href="#"
-			  id="userDropdown"
-			  role="button"
-			  data-bs-toggle="dropdown"
-			  aria-expanded="false"
-			>
-			  <span class="user-avatar me-2">
-			    <i class="fas fa-user-circle"></i>
-			  </span>
-			  <span>${loggedInUser.hoTen}</span>
-			</a>
-            <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="userDropdown"
-            >
-              <li>
-                <a
-                  class="dropdown-item active"
-                  href="${pageContext.request.contextPath}/user/profile"
-                >
-                  <i class="fas fa-user-cog me-2"></i>Quản lý tài khoản
-                </a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a
-                  class="dropdown-item text-danger"
-                  href="${pageContext.request.contextPath}/logout"
-                >
-                  <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <jsp:include page="common/navbar.jsp"/>
 
     <div class="profile-container">
       <h2 class="text-center mb-4">Thông tin cá nhân</h2>
@@ -166,11 +94,13 @@ uri="http://java.sun.com/jsp/jstl/core" %>
       </c:if>
 
       <div class="avatar-container">
+        <c:set var="avatarPath" value="${empty loggedInUser.anhDaiDien ? 'resources/images/users-icon.jpg' : loggedInUser.anhDaiDien}"/>
         <img
-          src="${empty loggedInUser.anhDaiDien ? pageContext.request.contextPath.concat('/resources/images/default-avatar.png') : pageContext.request.contextPath.concat(loggedInUser.anhDaiDien)}"
+          src="${pageContext.request.contextPath}/${avatarPath}"
           alt="Avatar"
           class="avatar-preview"
           id="avatarPreview"
+          onerror="this.src='${pageContext.request.contextPath}/resources/images/users-icon.jpg'"
         />
 
         <form

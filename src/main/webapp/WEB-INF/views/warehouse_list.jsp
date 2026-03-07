@@ -169,13 +169,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/">
-                <i class="fas fa-mug-hot"></i> Milk Tea Shop
-            </a>
-        </div>
-    </nav>
+    <jsp:include page="common/navbar.jsp"/>
 
     <div class="main-content">
         <div class="container">
