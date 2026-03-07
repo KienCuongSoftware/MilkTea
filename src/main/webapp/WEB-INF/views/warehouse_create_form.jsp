@@ -1,0 +1,191 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@ taglib prefix="form"
+uri="http://www.springframework.org/tags/form" %> <%@ taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="spring"
+uri="http://www.springframework.org/tags" %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Thêm kho mới</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+        font-family: "Poppins", sans-serif;
+      }
+      .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+      .form-label {
+        font-weight: bold;
+        color: #333;
+      }
+      .btn {
+        width: 100%;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
+      .btn-success {
+        background: linear-gradient(135deg, #28a745, #218838);
+        border: none;
+      }
+      .btn-success:hover {
+        background: linear-gradient(135deg, #218838, #1e7e34);
+      }
+      .form-control {
+        border-radius: 5px;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #ced4da;
+      }
+      /* CSS cho input file */
+      .custom-file-input::-webkit-file-upload-button {
+        visibility: hidden;
+        display: none;
+      }
+      .custom-file-input::before {
+        content: "Chọn ảnh";
+        display: inline-block;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        outline: none;
+        white-space: nowrap;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .custom-file-input:hover::before {
+        background: linear-gradient(135deg, #0056b3, #004094);
+      }
+      .custom-file-input:active::before {
+        background: linear-gradient(135deg, #004094, #003075);
+      }
+      h2 {
+        font-weight: bold;
+        color: #007bff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .alert {
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .invalid-feedback {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-container">
+        <h2 class="text-center text-primary mb-4">Thêm kho mới</h2>
+
+        <c:if test="${not empty error}">
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+          >
+            ${error}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </c:if>
+
+        <c:if test="${not empty success}">
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            ${success}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+        </c:if>
+
+        <form:form
+          method="post"
+          action="${pageContext.request.contextPath}/warehouse/add"
+          modelAttribute="warehouse"
+          enctype="multipart/form-data"
+          accept-charset="UTF-8"
+        >
+          <div class="mb-3">
+            <label for="name" class="form-label">Tên kho:</label>
+            <form:input
+              path="name"
+              class="form-control"
+              required="required"
+              placeholder="Nhập tên kho"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="address" class="form-label">Địa chỉ:</label>
+            <form:input
+              path="address"
+              class="form-control"
+              required="required"
+              placeholder="Nhập địa chỉ"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-success">Lưu</button>
+        </form:form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Cập nhật trạng thái ngay khi trang load
+      window.onload = function() {
+          updateStatus();
+      }
+
+      function validatePrice(input) {
+        if (input.value > 999999) {
+          input.value = 999999;
+          input.classList.add("is-invalid");
+          input.nextElementSibling.textContent =
+            "Giá sản phẩm không thể vượt quá 999,999";
+        } else {
+          input.classList.remove("is-invalid");
+          input.nextElementSibling.textContent = "";
+        }
+      }
+
+      function updateStatus() {
+        const soLuong = parseInt(document.getElementById('soLuong').value) || 0;
+        const trangThai = document.getElementById('trangThai');
+        trangThai.value = soLuong > 0 ? 'true' : 'false';
+      }
+
+      function validateBeforeSubmit() {
+          updateStatus(); // Cập nhật trạng thái một lần nữa trước khi submit
+          return true;
+      }
+    </script>
+  </body>
+</html>

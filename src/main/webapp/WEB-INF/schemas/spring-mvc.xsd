@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.springframework.org/schema/mvc"
+            targetNamespace="http://www.springframework.org/schema/mvc"
+            elementFormDefault="qualified">
+  <xsd:element name="annotation-driven"/>
+  <xsd:element name="resources">
+    <xsd:complexType>
+      <xsd:attribute name="mapping" type="xsd:string"/>
+      <xsd:attribute name="location" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="interceptors">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="interceptor">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="mapping">
+    <xsd:complexType>
+      <xsd:attribute name="path" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="exclude-mapping">
+    <xsd:complexType>
+      <xsd:attribute name="path" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

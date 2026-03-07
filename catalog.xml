@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <system systemId="http://www.springframework.org/schema/beans/spring-beans.xsd"
+          uri="src/main/webapp/WEB-INF/schemas/spring-beans.xsd"/>
+  <system systemId="http://www.springframework.org/schema/context/spring-context.xsd"
+          uri="src/main/webapp/WEB-INF/schemas/spring-context.xsd"/>
+  <system systemId="http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+          uri="src/main/webapp/WEB-INF/schemas/spring-mvc.xsd"/>
+</catalog>
