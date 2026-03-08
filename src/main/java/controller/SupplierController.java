@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import beans.Supplier;
 import dao.DaoSupplier;
@@ -45,9 +46,12 @@ public class SupplierController {
         return "redirect:/supplier/view";
     }
     
-    @GetMapping("/delete/{maNhaCungCap}")
-    public String deleteProduct(@PathVariable int maNhaCungCap) {
-    	daoSupplier.delete(maNhaCungCap);
+    @PostMapping("/delete/{maNhaCungCap}")
+    public String deleteSupplier(@PathVariable int maNhaCungCap, @RequestParam(name = "csrfToken", required = false) String token, HttpSession session) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/supplier/view";
+        }
+        daoSupplier.delete(maNhaCungCap);
         return "redirect:/supplier/view";
     }
     

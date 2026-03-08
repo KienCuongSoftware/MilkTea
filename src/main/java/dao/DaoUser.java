@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import beans.User;
@@ -15,33 +16,56 @@ public class DaoUser {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public User checkLogin(String username, String password) {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /** Find user by username (for login - password in DB may be hashed). */
+    private User findByUsername(String username) {
         String sql = "SELECT nd.*, pq.TenQuyen FROM NGUOI_DUNG nd " +
                      "JOIN PHAN_QUYEN pq ON nd.MaQuyen = pq.MaQuyen " +
-                     "WHERE nd.TenDangNhap = ? AND nd.MatKhau = ? AND nd.TrangThai = true";
+                     "WHERE nd.TenDangNhap = ? AND nd.TrangThai = true";
         try {
-        	return jdbcTemplate.queryForObject(
-        		    sql,
-        		    new Object[]{ username, password },
-        		    (java.sql.ResultSet rs, int rowNum) -> {
-        		        User user = new User();
-        		        user.setMaNd(rs.getInt("MaND"));
-        		        user.setHoTen(rs.getString("HoTen"));
-        		        user.setTenDangNhap(rs.getString("TenDangNhap"));
-        		        user.setEmail(rs.getString("Email"));
-        		        user.setSoDienThoai(rs.getString("SoDienThoai"));
-        		        user.setDiaChi(rs.getString("DiaChi"));
-        		        user.setMaQuyen(rs.getInt("MaQuyen"));
-        		        user.setTrangThai(rs.getBoolean("TrangThai"));
-        		        user.setNgayTao(rs.getTimestamp("NgayTao"));
-        		        user.setTenQuyen(rs.getString("TenQuyen"));
-        		        user.setAnhDaiDien(rs.getString("AnhDaiDien"));
-        		        return user;
-        		    }
-        		);
+            return jdbcTemplate.queryForObject(sql, new Object[]{ username },
+                (java.sql.ResultSet rs, int rowNum) -> {
+                    User user = new User();
+                    user.setMaNd(rs.getInt("MaND"));
+                    user.setHoTen(rs.getString("HoTen"));
+                    user.setTenDangNhap(rs.getString("TenDangNhap"));
+                    user.setMatKhau(rs.getString("MatKhau"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setSoDienThoai(rs.getString("SoDienThoai"));
+                    user.setDiaChi(rs.getString("DiaChi"));
+                    user.setMaQuyen(rs.getInt("MaQuyen"));
+                    user.setTrangThai(rs.getBoolean("TrangThai"));
+                    user.setNgayTao(rs.getTimestamp("NgayTao"));
+                    user.setTenQuyen(rs.getString("TenQuyen"));
+                    user.setAnhDaiDien(rs.getString("AnhDaiDien"));
+                    return user;
+                });
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /** Login: match password with BCrypt (or plain for legacy DB). */
+    public User checkLogin(String username, String password) {
+        User user = findByUsername(username);
+        if (user == null) {
+            return null;
+        }
+        String stored = user.getMatKhau();
+        if (stored == null) {
+            return null;
+        }
+        boolean matches = passwordEncoder.matches(password, stored);
+        if (!matches && password.equals(stored)) {
+            matches = true; // legacy plain-text
+        }
+        if (!matches) {
+            return null;
+        }
+        user.setMatKhau(null);
+        return user;
     }
     
     public List<User> list(int permission) {
@@ -89,11 +113,14 @@ public class DaoUser {
     }
     
     public int save(User u) {
+        String rawPassword = u.getMatKhau();
+        String hashedPassword = (rawPassword != null && !rawPassword.isEmpty())
+            ? passwordEncoder.encode(rawPassword) : passwordEncoder.encode("123");
         String sql = "INSERT INTO nguoi_dung (HoTen, TenDangNhap, MatKhau, Email, SoDienThoai, MaQuyen, DiaChi, AnhDaiDien, TrangThai, NgayTao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, 
+        return jdbcTemplate.update(sql,
             u.getHoTen(),
             u.getTenDangNhap(),
-            u.getMatKhau(),
+            hashedPassword,
             u.getEmail(),
             u.getSoDienThoai(),
             u.getMaQuyen(),
@@ -223,14 +250,17 @@ public class DaoUser {
     }
 
     public boolean checkPassword(String username, String password) {
-        String sql = "SELECT COUNT(*) FROM NGUOI_DUNG WHERE TenDangNhap=? AND MatKhau=?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, username, password);
-        return count > 0;
+        User user = findByUsername(username);
+        if (user == null || user.getMatKhau() == null) {
+            return false;
+        }
+        return passwordEncoder.matches(password, user.getMatKhau()) || password.equals(user.getMatKhau());
     }
 
     public void updatePassword(String username, String newPassword) {
+        String hashed = passwordEncoder.encode(newPassword);
         String sql = "UPDATE NGUOI_DUNG SET MatKhau=? WHERE TenDangNhap=?";
-        jdbcTemplate.update(sql, newPassword, username);
+        jdbcTemplate.update(sql, hashed, username);
     }
 
     public int update(User u) {

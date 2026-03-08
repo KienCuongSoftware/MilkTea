@@ -170,19 +170,15 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
                     <td>${category.maDM}</td>
                     <td>${category.tenDM}</td>
                     <td>
-                      <a
-                        href="${pageContext.request.contextPath}/category/edit/${category.maDM}"
-                        class="btn btn-action btn-edit"
-                      >
+                      <a href="${pageContext.request.contextPath}/category/edit/${category.maDM}" class="btn btn-action btn-edit">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a
-                        href="${pageContext.request.contextPath}/category/delete/${category.maDM}"
-                        class="btn btn-action btn-delete"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');"
-                      >
-                        <i class="fas fa-trash"></i>
-                      </a>
+                      <form action="${pageContext.request.contextPath}/category/delete/${category.maDM}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                        <button type="submit" class="btn btn-action btn-delete border-0 bg-transparent p-0">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </form>
                     </td>
                   </tr>
                 </c:forEach>

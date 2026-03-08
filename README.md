@@ -48,10 +48,11 @@ CREATE DATABASE TeaMilk CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- Create user and grant privileges as needed
 ```
 
-Update database connection in `src/main/webapp/WEB-INF/spring-servlet.xml` if required:
+Copy and edit `src/main/resources/jdbc.properties` with your database settings:
 
-- `url`: `jdbc:mysql://localhost:3306/TeaMilk?serverTimezone=UTC`
-- `username` / `password`
+- `jdbc.url` – e.g. `jdbc:mysql://localhost:3306/TeaMilk?serverTimezone=UTC`
+- `jdbc.username` – your MySQL user
+- `jdbc.password` – your MySQL password (default in repo is `changeme`; do not commit real production passwords)
 
 Run your schema scripts (tables for products, categories, users, permissions, suppliers, warehouse, etc.) if you have them.
 

@@ -25,26 +25,58 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
         
-        // Kiểm tra session
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            User loggedInUser = (User) session.getAttribute("loggedInUser");
-            if (loggedInUser != null) {
+        if (session == null) {
+            response.sendRedirect(contextPath + "/login");
+            return false;
+        }
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            response.sendRedirect(contextPath + "/login");
+            return false;
+        }
+
+        String path = requestURI.substring(contextPath.length());
+        if (path.isEmpty()) {
+            path = "/";
+        }
+        String role = loggedInUser.getTenQuyen() != null ? loggedInUser.getTenQuyen().toLowerCase() : "";
+
+        if (!hasPermission(path, role)) {
+            response.sendRedirect(contextPath + "/home");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean hasPermission(String path, String role) {
+        if (path.startsWith("/product") || path.startsWith("/category") || path.startsWith("/supplier")) {
+            return "quản lý".equals(role) || "chủ quán".equals(role);
+        }
+        if (path.startsWith("/user")) {
+            if (path.equals("/user/profile") || path.startsWith("/user/upload-avatar") || path.startsWith("/user/update")) {
                 return true;
             }
+            return "quản lý".equals(role) || "chủ quán".equals(role);
         }
-        
-        // Nếu chưa đăng nhập, chuyển hướng về trang login
-        response.sendRedirect(contextPath + "/login");
-        return false;
+        if (path.startsWith("/warehouse")) {
+            return "nhân viên kho".equals(role) || "quản lý".equals(role) || "chủ quán".equals(role);
+        }
+        return true;
     }
-    
+
     private boolean isPublicPage(String requestURI, String contextPath) {
-        return requestURI.contains("/login") || 
-               requestURI.contains("/resources/") || 
-               requestURI.contains("/search") ||
-               requestURI.equals(contextPath + "/") ||
-               requestURI.equals(contextPath + "/home");
+        if (requestURI.contains("/login") ||
+            requestURI.contains("/resources/") ||
+            requestURI.contains("/search") ||
+            requestURI.equals(contextPath + "/") ||
+            requestURI.equals(contextPath + "/home")) {
+            return true;
+        }
+        // Cho khách xem danh sách sản phẩm và chi tiết sản phẩm
+        String path = requestURI.startsWith(contextPath) ? requestURI.substring(contextPath.length()) : requestURI;
+        if (path.isEmpty()) path = "/";
+        return path.equals("/product/view") || path.startsWith("/product/detail/");
     }
     
     @Override

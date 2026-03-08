@@ -225,11 +225,12 @@
                                        class="btn-action btn-edit">
                                         <i class="fas fa-edit me-1"></i>Sửa
                                     </a>
-                                    <a href="${pageContext.request.contextPath}/supplier/delete/${supplier.code}" 
-                                       class="btn-action btn-delete"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?');">
-                                        <i class="fas fa-trash me-1"></i>Xóa
-                                    </a>
+                                    <form action="${pageContext.request.contextPath}/supplier/delete/${supplier.code}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?');">
+                                        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                                        <button type="submit" class="btn-action btn-delete border-0 bg-transparent p-0">
+                                            <i class="fas fa-trash me-1"></i>Xóa
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>

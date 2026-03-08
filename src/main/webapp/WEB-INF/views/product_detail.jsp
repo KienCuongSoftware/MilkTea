@@ -153,7 +153,8 @@
                         </div>
                     </c:if>
 
-                    <!-- Admin buttons -->
+                    <!-- Chỉ quản lý / chủ quán mới thấy nút sửa-xóa -->
+                    <c:if test="${permission == 'quản lý' || permission == 'chủ quán'}">
                     <div class="mt-4">
                         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" 
                                 data-bs-target="#editForm">
@@ -163,17 +164,20 @@
                            class="btn btn-warning ms-2">
                             <i class="fas fa-pencil-alt me-1"></i> Sửa sản phẩm
                         </a>
-                        <a href="${pageContext.request.contextPath}/product/delete/${product.maSP}" 
-                           class="btn btn-danger ms-2"
-                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
-                            <i class="fas fa-trash me-1"></i> Xóa
-                        </a>
+                        <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline ms-2" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-1"></i> Xóa
+                            </button>
+                        </form>
                     </div>
+                    </c:if>
                 </div>
             </div>
         </div>
 
-        <!-- Form chỉnh sửa chi tiết (ẩn) -->
+        <!-- Form chỉnh sửa chi tiết (chỉ quản lý / chủ quán) -->
+        <c:if test="${permission == 'quản lý' || permission == 'chủ quán'}">
         <div class="collapse mt-4" id="editForm">
             <div class="card">
                 <div class="card-body">
@@ -211,17 +215,19 @@
                                 <i class="fas fa-save me-1"></i> Lưu thay đổi
                             </button>
                             <c:if test="${not empty detail.maCTSP}">
-                                <a href="${pageContext.request.contextPath}/product/detail/delete/${product.maSP}" 
-                                   class="btn btn-danger ms-2"
-                                   onclick="return confirm('Bạn có chắc muốn xóa chi tiết sản phẩm này?')">
-                                    <i class="fas fa-trash me-1"></i> Xóa chi tiết
-                                </a>
+                                <form action="${pageContext.request.contextPath}/product/detail/delete/${product.maSP}" method="post" class="d-inline ms-2" onsubmit="return confirm('Bạn có chắc muốn xóa chi tiết sản phẩm này?');">
+                                    <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash me-1"></i> Xóa chi tiết
+                                    </button>
+                                </form>
                             </c:if>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        </c:if>
 
         <!-- Sản phẩm liên quan -->
         <div class="related-products mt-5">

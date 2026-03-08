@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import beans.Warehouse;
 import dao.DaoWarehouse;
@@ -45,9 +46,12 @@ public class WarehouseController {
         return "redirect:/warehouse/view";
     }
     
-    @GetMapping("/delete/{maKho}")
-    public String deleteProduct(@PathVariable int maKho) {
-    	daoWarehouse.delete(maKho);
+    @PostMapping("/delete/{maKho}")
+    public String deleteWarehouse(@PathVariable int maKho, @RequestParam(name = "csrfToken", required = false) String token, HttpSession session) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/warehouse/view";
+        }
+        daoWarehouse.delete(maKho);
         return "redirect:/warehouse/view";
     }
     

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -221,32 +220,32 @@ public class UserController {
         return "redirect:/user/view";
     }
     
-    public String saveFile(MultipartFile file) {
-		String path = "E:\\lam btsv\\2025\\thang 4\\21.4\\Ngoc Lan\\MilkTea\\src\\main\\webapp\\resources\\images\\";
+    private String saveFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+        String basePath = servletContext.getRealPath("/resources/images/");
+        if (basePath == null) {
+            return null;
+        }
         LocalDateTime localDateTime = LocalDateTime.now();
-        Timestamp timestamp = Timestamp.valueOf(localDateTime);
-        Date date = new Date(timestamp.getTime());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String formattedDate = formatter.format(date);
-        String fileName = "product-" +
-                formattedDate + "." + getFileExtension(file.getOriginalFilename());
-        String rs = "images/" + fileName;
-        try
-        {
-            File dir = new File(path);
-            if (!dir.exists())
-            {
+        String formattedDate = formatter.format(Timestamp.valueOf(localDateTime));
+        String ext = getFileExtension(file.getOriginalFilename());
+        String fileName = "user-" + formattedDate + (ext.isEmpty() ? "" : "." + ext);
+        String relativePath = "images/" + fileName;
+        try {
+            File dir = new File(basePath);
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
-            Files.copy(file.getInputStream(), Paths.get(path + fileName));
-            return rs;
-        }
-        catch(Exception e)
-        {
+            Files.copy(file.getInputStream(), Paths.get(basePath, fileName));
+            return relativePath;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-	}
+    }
     
     public String getFileExtension(String fileName) {
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
@@ -256,8 +255,11 @@ public class UserController {
         }
     }
     
-    @GetMapping("/delete/{maNd}")
-    public String deleteProduct(@PathVariable int maNd) {
+    @PostMapping("/delete/{maNd}")
+    public String deleteUser(@PathVariable int maNd, @RequestParam(name = "csrfToken", required = false) String token, HttpSession session) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/user/view";
+        }
         daoUser.delete(maNd);
         return "redirect:/user/view";
     }

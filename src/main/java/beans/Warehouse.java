@@ -29,8 +29,6 @@ public class Warehouse {
 		this.address = address;
 	}
 	public Warehouse() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

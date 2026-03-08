@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import beans.Category;
 import dao.DaoCategory;
@@ -99,8 +101,12 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/delete/{maDM}")
-    public String deleteCategory(@PathVariable int maDM, RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{maDM}")
+    public String deleteCategory(@PathVariable int maDM, @RequestParam(name = "csrfToken", required = false) String token,
+                                 HttpSession session, RedirectAttributes redirectAttributes) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/category/view";
+        }
         try {
             if (daoCategory.deleteCategory(maDM)) {
                 redirectAttributes.addFlashAttribute("success", "Xóa danh mục thành công!");

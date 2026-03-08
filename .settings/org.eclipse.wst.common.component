@@ -76,7 +76,7 @@
         
         
         
-        <property name="java-output-path" value="/buoi_2/build/classes"/>
+        <property name="java-output-path" value="target/classes"/>
                                         
         
         

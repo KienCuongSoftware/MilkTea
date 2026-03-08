@@ -37,8 +37,6 @@ public class Supplier {
 		this.phone = phone;
 	}
 	public Supplier() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

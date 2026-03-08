@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 import beans.Product;
@@ -117,8 +119,11 @@ public class ProductController {
         return "redirect:/product/view";
     }
 
-    @GetMapping("/delete/{maSP}")
-    public String deleteProduct(@PathVariable int maSP) {
+    @PostMapping("/delete/{maSP}")
+    public String deleteProduct(@PathVariable int maSP, @RequestParam(name = "csrfToken", required = false) String token, HttpSession session) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/product/view";
+        }
         daoProduct.delete(maSP);
         return "redirect:/product/view";
     }
@@ -180,8 +185,12 @@ public class ProductController {
         return "redirect:/product/detail/" + detail.getMaSP();
     }
 
-    @GetMapping("/detail/delete/{maSP}")
-    public String deleteDetail(@PathVariable int maSP, RedirectAttributes redirectAttributes) {
+    @PostMapping("/detail/delete/{maSP}")
+    public String deleteDetail(@PathVariable int maSP, @RequestParam(name = "csrfToken", required = false) String token,
+                              HttpSession session, RedirectAttributes redirectAttributes) {
+        if (token == null || !token.equals(session.getAttribute(GlobalControllerAdvice.CSRF_TOKEN))) {
+            return "redirect:/product/view";
+        }
         try {
             if (daoProductDetail.delete(maSP)) {
                 redirectAttributes.addFlashAttribute("success", "Xóa chi tiết sản phẩm thành công!");
