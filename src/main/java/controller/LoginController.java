@@ -20,9 +20,11 @@ public class LoginController {
     
     @GetMapping("/login")
     public String showLoginForm(HttpSession session, @RequestParam(name = "redirect", required = false) String redirectUrl) {
-        // Nếu đã đăng nhập, chuyển hướng về trang chủ
         if (session != null && session.getAttribute("loggedInUser") != null) {
-            return "redirect:/home";
+            User u = (User) session.getAttribute("loggedInUser");
+            String role = u.getTenQuyen() != null ? u.getTenQuyen().toLowerCase() : "";
+            if ("khách hàng".equals(role)) return "redirect:/home";
+            return "redirect:/dashboard";
         }
         if (session != null && redirectUrl != null && !redirectUrl.isEmpty()) {
             session.setAttribute("targetUrl", redirectUrl.startsWith("/") ? redirectUrl : "/" + redirectUrl);
@@ -51,14 +53,14 @@ public class LoginController {
             session.setMaxInactiveInterval(30 * 60); // 30 phút
             session.setAttribute("loggedInUser", user);
             
-            // Kiểm tra URL đích để chuyển hướng
             String targetUrl = (String) session.getAttribute("targetUrl");
             if (targetUrl != null) {
                 session.removeAttribute("targetUrl");
                 return "redirect:" + targetUrl;
             }
-            
-            return "redirect:/home";
+            String role = user.getTenQuyen() != null ? user.getTenQuyen().toLowerCase() : "";
+            if ("khách hàng".equals(role)) return "redirect:/home";
+            return "redirect:/dashboard";
         } else {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
             return "redirect:/login";

@@ -82,18 +82,7 @@
         
         
         <property name="context-root" value="MilkTea"/>
-                                                                                                    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        <wb-resource deploy-path="/WEB-INF/lib" source-path="target/eclipse-wtp-libs"/>
     </wb-module>
                                                 
 

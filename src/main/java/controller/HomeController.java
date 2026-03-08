@@ -11,8 +11,11 @@ import java.io.File;
 import java.util.List;
 import beans.Product;
 import beans.Category;
+import beans.DonHang;
 import dao.DaoProduct;
 import dao.DaoCategory;
+import dao.DaoDonHang;
+import dao.DaoChiTietDonHang;
 import javax.servlet.http.HttpSession;
 import beans.User;
 
@@ -24,6 +27,12 @@ public class HomeController {
 
     @Autowired
     private DaoCategory daoCategory;
+
+    @Autowired
+    private DaoDonHang daoDonHang;
+
+    @Autowired
+    private DaoChiTietDonHang daoChiTietDonHang;
 
     @Autowired
     ServletContext servletContext;
@@ -41,22 +50,143 @@ public class HomeController {
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model, HttpSession session) {
         checkAndSetSession(session, model);
-        
-        // Get products and categories
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return redirectToHomeWithProducts(model);
+        }
+        String permission = user.getTenQuyen() != null ? user.getTenQuyen().toLowerCase() : "";
+        if (!"khách hàng".equals(permission)) {
+            return "redirect:/dashboard";
+        }
+        return redirectToHomeWithProducts(model);
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, HttpSession session) {
+        checkAndSetSession(session, model);
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        String permission = user.getTenQuyen() != null ? user.getTenQuyen().toLowerCase() : "";
+        if ("khách hàng".equals(permission)) {
+            return "redirect:/home";
+        }
+
+        if ("nhân viên order".equals(permission)) {
+            List<DonHang> orders = daoDonHang.findByStatus(0);
+            for (DonHang dh : orders) {
+                dh.setChiTiet(daoChiTietDonHang.findByDonHang(dh.getId()));
+            }
+            List<Object[]> compByDay = daoDonHang.getCompletedOrdersCountByDay(7);
+            List<String> compLabels = new java.util.ArrayList<>();
+            List<Integer> compData = new java.util.ArrayList<>();
+            for (Object[] c : compByDay) {
+                compLabels.add((String) c[0]);
+                compData.add((Integer) c[1]);
+            }
+            model.addAttribute("orders", orders);
+            model.addAttribute("completedLabels", compLabels);
+            model.addAttribute("completedData", compData);
+            model.addAttribute("dashboardTitle", "Order");
+            model.addAttribute("dashboardRole", "order");
+            return "dashboard";
+        }
+        if ("nhân viên pha chế".equals(permission)) {
+            List<DonHang> orders = daoDonHang.findByStatus(1);
+            for (DonHang dh : orders) {
+                dh.setChiTiet(daoChiTietDonHang.findByDonHang(dh.getId()));
+            }
+            List<Object[]> compByDay = daoDonHang.getCompletedOrdersCountByDay(7);
+            List<String> compLabels = new java.util.ArrayList<>();
+            List<Integer> compData = new java.util.ArrayList<>();
+            for (Object[] c : compByDay) {
+                compLabels.add((String) c[0]);
+                compData.add((Integer) c[1]);
+            }
+            model.addAttribute("orders", orders);
+            model.addAttribute("completedLabels", compLabels);
+            model.addAttribute("completedData", compData);
+            model.addAttribute("dashboardTitle", "Pha chế");
+            model.addAttribute("dashboardRole", "brewing");
+            return "dashboard";
+        }
+        if ("nhân viên thu ngân".equals(permission)) {
+            List<DonHang> orders = daoDonHang.findByStatus(2);
+            for (DonHang dh : orders) {
+                dh.setChiTiet(daoChiTietDonHang.findByDonHang(dh.getId()));
+            }
+            List<Object[]> compByDay = daoDonHang.getCompletedOrdersCountByDay(7);
+            List<String> compLabels = new java.util.ArrayList<>();
+            List<Integer> compData = new java.util.ArrayList<>();
+            for (Object[] c : compByDay) {
+                compLabels.add((String) c[0]);
+                compData.add((Integer) c[1]);
+            }
+            model.addAttribute("orders", orders);
+            model.addAttribute("completedLabels", compLabels);
+            model.addAttribute("completedData", compData);
+            model.addAttribute("dashboardTitle", "Thu ngân");
+            model.addAttribute("dashboardRole", "cashier");
+            return "dashboard";
+        }
+        if ("nhân viên kho".equals(permission)) {
+            List<Product> lowStock = daoProduct.getLowStockProducts(10);
+            for (Product p : lowStock) {
+                Category c = daoCategory.getCategoryById(p.getMaDM());
+                if (c != null) p.setTenDM(c.getTenDM());
+            }
+            model.addAttribute("totalProducts", daoProduct.getTotalProducts());
+            model.addAttribute("lowStockCount", daoProduct.getLowStockCount(10));
+            model.addAttribute("lowStockProducts", lowStock);
+            model.addAttribute("dashboardTitle", "Quản lý kho");
+            model.addAttribute("dashboardRole", "warehouse");
+            return "dashboard";
+        }
+        if ("quản lý".equals(permission) || "chủ quán".equals(permission)) {
+            int lastDays = 7;
+            List<Object[]> revByDay = daoDonHang.getRevenueByDay(lastDays);
+            List<Object[]> compByDay = daoDonHang.getCompletedOrdersCountByDay(lastDays);
+            List<String> revLabels = new java.util.ArrayList<>();
+            List<java.math.BigDecimal> revData = new java.util.ArrayList<>();
+            for (Object[] r : revByDay) {
+                revLabels.add((String) r[0]);
+                revData.add((java.math.BigDecimal) r[1]);
+            }
+            List<String> compLabels = new java.util.ArrayList<>();
+            List<Integer> compData = new java.util.ArrayList<>();
+            for (Object[] c : compByDay) {
+                compLabels.add((String) c[0]);
+                compData.add((Integer) c[1]);
+            }
+            model.addAttribute("orderCountConfirm", daoDonHang.countByStatus(0));
+            model.addAttribute("orderCountBrewing", daoDonHang.countByStatus(1));
+            model.addAttribute("orderCountPayment", daoDonHang.countByStatus(2));
+            model.addAttribute("orderCountDone", daoDonHang.countByStatus(3));
+            model.addAttribute("totalRevenue", daoDonHang.getTotalRevenue());
+            model.addAttribute("totalProducts", daoProduct.getTotalProducts());
+            model.addAttribute("revenueLabels", revLabels);
+            model.addAttribute("revenueData", revData);
+            model.addAttribute("completedLabels", compLabels);
+            model.addAttribute("completedData", compData);
+            model.addAttribute("dashboardTitle", "Tổng quan");
+            model.addAttribute("dashboardRole", "admin");
+            return "dashboard";
+        }
+        return "redirect:/home";
+    }
+
+    private String redirectToHomeWithProducts(Model model) {
         List<Product> products = daoProduct.getProducts();
         List<Category> categories = daoCategory.getAllCategories();
-        
-        // Set category names for products
         for (Product product : products) {
             Category category = daoCategory.getCategoryById(product.getMaDM());
             if (category != null) {
                 product.setTenDM(category.getTenDM());
             }
         }
-        
         model.addAttribute("products", products);
         model.addAttribute("categories", categories);
-        
         return "home";
     }
 

@@ -100,6 +100,33 @@ public class DaoProduct {
         return count != null ? count : 0;
     }
 
+    /** Số sản phẩm có tồn kho <= ngưỡng (dùng cho dashboard kho). */
+    public int getLowStockCount(int maxQuantity) {
+        String sql = "SELECT COUNT(*) FROM SAN_PHAM WHERE SoLuong <= ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, maxQuantity);
+        return count != null ? count : 0;
+    }
+
+    /** Danh sách sản phẩm có tồn kho <= ngưỡng (dashboard kho). */
+    public List<Product> getLowStockProducts(int maxQuantity) {
+        String sql = "SELECT * FROM SAN_PHAM WHERE SoLuong <= ? ORDER BY SoLuong ASC";
+        return jdbcTemplate.query(sql, new RowMapper<Product>() {
+            @Override
+            public Product mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+                Product p = new Product();
+                p.setMaSP(rs.getInt("MaSP"));
+                p.setTenSP(rs.getString("TenSP"));
+                p.setDonGia(rs.getBigDecimal("DonGia"));
+                p.setMaDM(rs.getInt("MaDM"));
+                p.setMoTa(rs.getString("MoTa"));
+                p.setHinhAnh(rs.getString("HinhAnh"));
+                p.setSoLuong(rs.getInt("SoLuong"));
+                p.setTrangThai(rs.getBoolean("TrangThai"));
+                return p;
+            }
+        }, maxQuantity);
+    }
+
     // Lấy sản phẩm theo trang
     public List<Product> getProductsByPage(int page, int pageSize) {
         int offset = (page - 1) * pageSize;

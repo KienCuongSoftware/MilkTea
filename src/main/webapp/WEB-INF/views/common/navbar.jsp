@@ -12,11 +12,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <c:if test="${not empty loggedInUser}">
-                    <%-- Trang chủ + Sản phẩm: cho mọi role (order, thu ngân, pha chế, khách hàng dùng chung) --%>
+                    <%-- Trang chủ: khách hàng -> /home (san pham), staff/admin -> /dashboard (tong quan) --%>
                     <li class="nav-item">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/home">
-                            <i class="fas fa-home"></i> Trang chủ
-                        </a>
+                        <c:choose>
+                            <c:when test="${permission == 'khách hàng'}">
+                                <a class="nav-link" href="${pageContext.request.contextPath}/home"><i class="fas fa-home"></i> Trang chủ</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a class="nav-link" href="${pageContext.request.contextPath}/dashboard"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                            </c:otherwise>
+                        </c:choose>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="${pageContext.request.contextPath}/product/view">

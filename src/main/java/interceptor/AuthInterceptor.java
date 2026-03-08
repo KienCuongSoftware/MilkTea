@@ -43,7 +43,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         String role = loggedInUser.getTenQuyen() != null ? loggedInUser.getTenQuyen().toLowerCase() : "";
 
         if (!hasPermission(path, role)) {
-            response.sendRedirect(contextPath + "/home");
+            if ("khách hàng".equals(role)) {
+                response.sendRedirect(contextPath + "/home");
+            } else {
+                response.sendRedirect(contextPath + "/dashboard");
+            }
             return false;
         }
         return true;
