@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0.8rem 1rem;">
+<link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet">
+<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="padding: 0.8rem 1rem; background-color: #FFFFFF !important; z-index: 1030; box-shadow: 0 2px 8px rgba(93,64,55,0.12);">
     <div class="container">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/" style="font-size: 1.5rem; font-weight: 600; color: #2d3436;">
-            <i class="fas fa-mug-hot" style="color: #0984e3; margin-right: 0.5rem;"></i> Milk Tea Shop
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/" style="font-size: 1.5rem; font-weight: 600;">
+            <i class="fas fa-mug-hot" style="margin-right: 0.5rem;"></i> Milk Tea Shop
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

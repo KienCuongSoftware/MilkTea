@@ -10,10 +10,11 @@
     <title>${dashboardTitle} - Milk Tea Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet">
     <style>
-        :root { --card-radius: 14px; --card-shadow: 0 4px 14px rgba(0,0,0,0.06); --card-hover: 0 8px 24px rgba(0,0,0,0.1); }
-        body { background: #f0f2f5; font-family: 'Segoe UI', system-ui, sans-serif; }
-        .dashboard-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border-radius: var(--card-radius); padding: 1.5rem 1.75rem; margin-bottom: 1.75rem; box-shadow: var(--card-shadow); }
+        :root { --card-radius: 14px; --card-shadow: 0 4px 14px rgba(93,64,55,0.08); --card-hover: 0 8px 24px rgba(93,64,55,0.12); }
+        body { background: #FAF6F0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        .dashboard-header { background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%); color: #FFF8E7; border-radius: var(--card-radius); padding: 1.5rem 1.75rem; margin-bottom: 1.75rem; box-shadow: var(--card-shadow); }
         .dashboard-header h2 { margin: 0; font-weight: 700; font-size: 1.6rem; }
         .stat-card { border: none; border-radius: var(--card-radius); box-shadow: var(--card-shadow); transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; }
         .stat-card:hover { transform: translateY(-4px); box-shadow: var(--card-hover); }
@@ -22,11 +23,11 @@
         .stat-card .stat-label { font-size: 0.85rem; opacity: 0.9; }
         .chart-card { border: none; border-radius: var(--card-radius); box-shadow: var(--card-shadow); background: #fff; }
         .chart-card .card-body { padding: 1.5rem; }
-        .chart-card .card-title { font-weight: 600; color: #2d3748; margin-bottom: 1rem; }
+        .chart-card .card-title { font-weight: 600; color: #3E2723; margin-bottom: 1rem; }
         .table-dash { border-radius: var(--card-radius); overflow: hidden; box-shadow: var(--card-shadow); }
-        .table-dash thead th { background: #4a5568; color: #fff; font-weight: 600; border: none; padding: 0.85rem 1rem; }
-        .table-dash tbody tr:hover { background: #f7fafc; }
-        .section-title { font-weight: 600; color: #2d3748; margin-bottom: 1rem; font-size: 1.05rem; }
+        .table-dash thead th { background: #5D4037; color: #FFF8E7; font-weight: 600; border: none; padding: 0.85rem 1rem; }
+        .table-dash tbody tr:hover { background: #FFF8E7; }
+        .section-title { font-weight: 600; color: #3E2723; margin-bottom: 1rem; font-size: 1.05rem; }
     </style>
 </head>
 <body>

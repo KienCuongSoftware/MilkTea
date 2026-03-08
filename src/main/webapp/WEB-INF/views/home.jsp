@@ -9,13 +9,14 @@
     <title>Trang chủ - Milk Tea Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #FAF6F0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+            background: linear-gradient(rgba(62, 39, 35, 0.75), rgba(62, 39, 35, 0.65)), 
                        url('${pageContext.request.contextPath}/resources/images/background.jpg');
             background-size: cover;
             background-position: center;
@@ -96,7 +97,7 @@
             margin: 0;
             font-size: 24px;
             font-weight: bold;
-            color: #333;
+            color: #3E2723;
             flex: 0 0 auto;
         }
         .search-filter-form {

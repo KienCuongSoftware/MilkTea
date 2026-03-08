@@ -15,9 +15,10 @@ prefix="c" %>
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet" />
     <style>
       body {
-        background: linear-gradient(120deg, #74b9ff, #0984e3);
+        background: linear-gradient(120deg, #8D6E63, #5D4037) !important;
         height: 100vh;
         display: flex;
         align-items: center;
@@ -25,7 +26,7 @@ prefix="c" %>
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
       .login-container {
-        background: white;
+        background: #FFF8E7;
         padding: 40px;
         border-radius: 15px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -58,7 +59,7 @@ prefix="c" %>
       }
       .brand-logo {
         font-size: 3rem;
-        color: #0984e3;
+        color: #5D4037;
         margin-bottom: 20px;
         animation: float 3s ease-in-out infinite;
       }
@@ -86,8 +87,8 @@ prefix="c" %>
         padding-right: 40px;
       }
       .form-control:focus {
-        border-color: #74b9ff;
-        box-shadow: 0 0 0 0.25rem rgba(116, 185, 255, 0.25);
+        border-color: #5D4037;
+        box-shadow: 0 0 0 0.25rem rgba(93, 64, 55, 0.25);
       }
       .password-toggle {
         position: absolute;
@@ -102,13 +103,13 @@ prefix="c" %>
         padding: 5px;
       }
       .password-toggle:hover {
-        color: #0984e3;
+        color: #5D4037;
       }
       .btn-login {
-        background: linear-gradient(120deg, #74b9ff, #0984e3);
+        background: linear-gradient(120deg, #5D4037, #3E2723) !important;
         border: none;
         border-radius: 10px;
-        color: white;
+        color: white !important;
         padding: 12px;
         font-weight: 600;
         width: 100%;
@@ -117,7 +118,8 @@ prefix="c" %>
       }
       .btn-login:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3);
+        box-shadow: 0 5px 15px rgba(62, 39, 35, 0.4);
+        background: #3E2723 !important;
       }
       .alert {
         border-radius: 10px;
@@ -147,8 +149,8 @@ prefix="c" %>
         margin: 15px 0;
       }
       .form-check-input:checked {
-        background-color: #0984e3;
-        border-color: #0984e3;
+        background-color: #5D4037;
+        border-color: #5D4037;
       }
     </style>
   </head>
