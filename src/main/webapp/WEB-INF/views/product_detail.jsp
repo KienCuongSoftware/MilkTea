@@ -25,6 +25,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 100%;
         }
         .price {
             font-size: 1.8rem;
@@ -91,6 +92,33 @@
             height: 200px;
             object-fit: cover;
         }
+        .rating-section, .comments-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 24px;
+        }
+        .rating-bar-fill {
+            background: #0d6efd;
+            height: 8px;
+            border-radius: 4px;
+            min-width: 2%;
+        }
+        .rating-bar-bg {
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .star-rating { color: #ffc107; }
+        .comment-item { border-left: 3px solid #0d6efd; padding-left: 12px; margin-bottom: 16px; }
+        .btn-review-comment {
+            padding: 0.55rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            min-width: 160px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -102,16 +130,70 @@
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
 
-        <div class="row">
-            <!-- Hình ảnh sản phẩm -->
-            <div class="col-md-5">
+        <div class="row align-items-stretch">
+            <!-- Hình ảnh sản phẩm + Đánh giá -->
+            <div class="col-md-5 d-flex flex-column">
                 <img src="${pageContext.request.contextPath}/resources/images/${product.hinhAnh}" 
-                     class="product-image" alt="${product.tenSP}">
+                     class="product-image align-self-start" alt="${product.tenSP}">
+
+                <!-- Điểm xếp hạng và bài đánh giá (dưới ảnh, ngang hàng với chi tiết bên phải) -->
+                <div class="rating-section mt-4 flex-grow-1 d-flex flex-column">
+                    <h5 class="mb-3"><i class="fas fa-star me-2"></i>Điểm xếp hạng và bài đánh giá</h5>
+                    <p class="text-muted small mb-3">Điểm xếp hạng đã được xác minh từ người dùng.</p>
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <c:set var="avg" value="${avgRating != null ? avgRating : 0}"/>
+                            <div class="display-4 fw-bold text-primary">${avg}</div>
+                            <div class="star-rating mb-1">
+                                <c:forEach begin="1" end="5" var="i">
+                                    <c:choose>
+                                        <c:when test="${i <= avg}"><i class="fas fa-star"></i></c:when>
+                                        <c:when test="${i - 1 < avg}"><i class="fas fa-star-half-alt"></i></c:when>
+                                        <c:otherwise><i class="far fa-star text-secondary"></i></c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                            <div class="text-muted small">${totalRatings} đánh giá</div>
+                        </div>
+                        <div class="col-md-8">
+                            <c:forEach begin="1" end="5" var="idx">
+                                <c:set var="star" value="${6 - idx}"/>
+                                <c:set var="cnt" value="${ratingCounts[star]}"/>
+                                <c:set var="pct" value="${totalRatings > 0 ? (cnt * 100 / totalRatings) : 0}"/>
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2" style="width:20px">${star}</span>
+                                    <i class="fas fa-star text-warning me-2"></i>
+                                    <div class="flex-grow-1 rating-bar-bg" style="height:8px">
+                                        <div class="rating-bar-fill" data-width="${pct}"></div>
+                                    </div>
+                                    <span class="ms-2 small text-muted">${cnt}</span>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                    <c:if test="${not empty loggedInUser}">
+                        <form action="${pageContext.request.contextPath}/product/detail/${product.maSP}/review" method="post" class="mt-4 pt-3 border-top">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                            <label class="form-label">Gửi đánh giá của bạn</label>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <select name="diem" class="form-select form-select-sm" style="width:auto" required>
+                                    <option value="5">5 sao</option>
+                                    <option value="4">4 sao</option>
+                                    <option value="3">3 sao</option>
+                                    <option value="2">2 sao</option>
+                                    <option value="1">1 sao</option>
+                                </select>
+                                <input type="text" name="noiDung" class="form-control flex-grow-1" style="max-width:300px" placeholder="Nội dung (tùy chọn)">
+                                <button type="submit" class="btn btn-primary btn-review-comment">Gửi đánh giá</button>
+                            </div>
+                        </form>
+                    </c:if>
+                </div>
             </div>
 
-            <!-- Thông tin sản phẩm -->
-            <div class="col-md-7">
-                <div class="product-info">
+            <!-- Thông tin sản phẩm (cột phải cao bằng cột trái: ảnh + đánh giá) -->
+            <div class="col-md-7 d-flex flex-column">
+                <div class="product-info flex-grow-1">
                     <h2 class="mb-3">${product.tenSP}</h2>
                     <p class="text-muted mb-2">Danh mục: ${product.tenDM}</p>
                     
@@ -229,6 +311,35 @@
         </div>
         </c:if>
 
+        <!-- Bình luận (trên phần sản phẩm liên quan) -->
+        <div class="comments-section">
+            <h5 class="mb-3"><i class="fas fa-comments me-2"></i>Bình luận</h5>
+            <c:if test="${not empty loggedInUser}">
+                <form action="${pageContext.request.contextPath}/product/detail/${product.maSP}/comment" method="post" class="mb-4">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                    <div class="mb-2">
+                        <label class="form-label">Viết bình luận</label>
+                        <textarea name="noiDung" class="form-control" rows="2" placeholder="Chia sẻ cảm nhận của bạn..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-review-comment">Gửi bình luận</button>
+                </form>
+            </c:if>
+            <c:choose>
+                <c:when test="${empty comments}">
+                    <p class="text-muted mb-0">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${comments}" var="c">
+                        <div class="comment-item">
+                            <strong>${c.hoTen}</strong>
+                            <span class="text-muted small ms-2"><fmt:formatDate value="${c.ngayTao}" pattern="dd/MM/yyyy HH:mm"/></span>
+                            <p class="mb-0 mt-1">${c.noiDung}</p>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
         <!-- Sản phẩm liên quan -->
         <div class="related-products mt-5">
             <h3 class="mb-4">Sản phẩm liên quan</h3>
@@ -287,5 +398,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.querySelectorAll('.rating-bar-fill[data-width]').forEach(function(el){ el.style.width = (el.getAttribute('data-width') || 0) + '%'; });
+    </script>
 </body>
 </html> 

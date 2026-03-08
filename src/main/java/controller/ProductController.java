@@ -9,13 +9,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.stream.Collectors;
 import beans.Product;
 import beans.Category;
 import beans.ProductDetail;
+import beans.DanhGia;
+import beans.BinhLuan;
+import beans.User;
 import dao.DaoProduct;
 import dao.DaoCategory;
 import dao.DaoProductDetail;
+import dao.DaoDanhGia;
+import dao.DaoBinhLuan;
 
 @Controller
 @RequestMapping("/product")
@@ -29,7 +33,12 @@ public class ProductController {
     
     @Autowired
     private DaoProductDetail daoProductDetail;
-    
+
+    @Autowired
+    private DaoDanhGia daoDanhGia;
+    @Autowired
+    private DaoBinhLuan daoBinhLuan;
+
     @GetMapping("/view")
     public String viewProducts(Model model) {
         List<Product> products = daoProduct.getProducts();
@@ -147,21 +156,81 @@ public class ProductController {
         }
         
         List<Product> allProducts = daoProduct.getProducts();
-        List<Product> relatedProducts = allProducts.stream()
-            .filter(p -> p.getMaDM() == product.getMaDM() && p.getMaSP() != product.getMaSP())
-            .peek(p -> {
+        List<Product> relatedProducts = new java.util.ArrayList<>();
+        for (Product p : allProducts) {
+            if (p.getMaDM() == product.getMaDM() && p.getMaSP() != product.getMaSP()) {
                 Category cat = daoCategory.getCategoryById(p.getMaDM());
                 if (cat != null) {
                     p.setTenDM(cat.getTenDM());
                 }
-            })
-            .limit(4)
-            .collect(Collectors.toList());
+                relatedProducts.add(p);
+                if (relatedProducts.size() >= 4) {
+                    break;
+                }
+            }
+        }
+
+        List<DanhGia> reviews = daoDanhGia.findByMaSP(maSP);
+        Double avgRating = daoDanhGia.getAverageRating(maSP);
+        int totalRatings = daoDanhGia.getTotalRatings(maSP);
+        int[] ratingCounts = new int[6];
+        for (int i = 1; i <= 5; i++) {
+            ratingCounts[i] = daoDanhGia.getCountByDiem(maSP, i);
+        }
+        List<BinhLuan> comments = daoBinhLuan.findByMaSP(maSP);
         
         model.addAttribute("product", product);
         model.addAttribute("detail", detail);
         model.addAttribute("relatedProducts", relatedProducts);
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("avgRating", avgRating);
+        model.addAttribute("totalRatings", totalRatings);
+        model.addAttribute("ratingCounts", ratingCounts);
+        model.addAttribute("comments", comments);
         return "product_detail";
+    }
+
+    @PostMapping("/detail/{maSP}/review")
+    public String addReview(@PathVariable int maSP, @RequestParam int diem, @RequestParam(required = false) String noiDung,
+                            HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để đánh giá sản phẩm.");
+            return "redirect:/login?redirect=/product/detail/" + maSP;
+        }
+        if (diem < 1 || diem > 5) {
+            redirectAttributes.addFlashAttribute("error", "Điểm đánh giá phải từ 1 đến 5.");
+            return "redirect:/product/detail/" + maSP;
+        }
+        DanhGia d = new DanhGia();
+        d.setMaND(user.getMaNd());
+        d.setMaSP(maSP);
+        d.setDiem(diem);
+        d.setNoiDung(noiDung != null ? noiDung.trim() : null);
+        daoDanhGia.save(d);
+        redirectAttributes.addFlashAttribute("success", "Cảm ơn bạn đã đánh giá sản phẩm!");
+        return "redirect:/product/detail/" + maSP;
+    }
+
+    @PostMapping("/detail/{maSP}/comment")
+    public String addComment(@PathVariable int maSP, @RequestParam String noiDung,
+                             HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng đăng nhập để bình luận.");
+            return "redirect:/login?redirect=/product/detail/" + maSP;
+        }
+        if (noiDung == null || noiDung.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Nội dung bình luận không được để trống.");
+            return "redirect:/product/detail/" + maSP;
+        }
+        BinhLuan b = new BinhLuan();
+        b.setMaND(user.getMaNd());
+        b.setMaSP(maSP);
+        b.setNoiDung(noiDung.trim());
+        daoBinhLuan.save(b);
+        redirectAttributes.addFlashAttribute("success", "Đã gửi bình luận.");
+        return "redirect:/product/detail/" + maSP;
     }
 
     @PostMapping("/detail/save")

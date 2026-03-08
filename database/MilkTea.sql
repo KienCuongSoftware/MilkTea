@@ -7,13 +7,15 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+USE `milktea`;
 
 --
 -- Table structure for table `chi_tiet_don_hang`
@@ -390,6 +392,70 @@ LOCK TABLES `voucher` WRITE;
 INSERT INTO `voucher` VALUES (1,'NEWCUST10','Giảm 10% cho khách mới','Chương trình khuyến mãi dành cho khách hàng đăng ký lần đầu','2025-05-01 00:00:00','2025-06-01 23:59:59',10,NULL),(2,'SUMMER15','Ưu đãi hè 15%','Giảm giá toàn bộ đơn hàng vào tháng 6','2025-06-01 00:00:00','2025-06-30 23:59:59',15,NULL),(3,'VIP30','Voucher VIP giảm 30%','Chỉ áp dụng cho khách hàng VIP hạng Vàng trở lên','2025-05-10 00:00:00','2025-07-10 23:59:59',30,NULL),(4,'FLASH100K','Flash Sale giảm 100K','Giảm ngay 100.000đ cho 100 đơn đầu tiên mỗi ngày','2025-05-14 00:00:00','2025-05-20 23:59:59',NULL,100000),(5,'TETSALE','Tết Rộn Ràng – Giảm 20%','Áp dụng cho tất cả đơn hàng từ 20/01 đến 30/01','2025-01-20 00:00:00','2025-01-30 23:59:59',20,NULL);
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `danh_gia`
+--
+
+DROP TABLE IF EXISTS `danh_gia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `danh_gia` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `MaND` int NOT NULL,
+  `MaSP` int NOT NULL,
+  `Diem` tinyint NOT NULL COMMENT '1-5 sao',
+  `NoiDung` text COLLATE utf8mb4_unicode_ci,
+  `NgayTao` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `MaND` (`MaND`),
+  KEY `MaSP` (`MaSP`),
+  CONSTRAINT `danh_gia_ibfk_1` FOREIGN KEY (`MaND`) REFERENCES `nguoi_dung` (`MaND`) ON DELETE CASCADE,
+  CONSTRAINT `danh_gia_ibfk_2` FOREIGN KEY (`MaSP`) REFERENCES `san_pham` (`MaSP`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `danh_gia`
+--
+
+LOCK TABLES `danh_gia` WRITE;
+/*!40000 ALTER TABLE `danh_gia` DISABLE KEYS */;
+INSERT INTO `danh_gia` VALUES (1,7,1,5,'Trà sữa Thái xanh rất ngon, vị thanh mát, sẽ ủng hộ dài dài!','2026-03-01 10:00:00'),(2,1,1,4,'Sản phẩm ổn, giá hợp lý.','2026-03-02 11:30:00'),(3,2,1,5,'Điểm 5 sao cho trà sữa này.','2026-03-03 09:15:00'),(4,7,2,4,'Trà sữa Hồng Kông đậm vị, béo ngậy.','2026-03-04 14:20:00'),(5,7,3,5,'Matcha Nhật Bản chuẩn vị, rất thích!','2026-03-05 16:45:00'),(6,3,1,5,'Chủ quán làm trà sữa ngon lắm, khách nào cũng khen.','2026-03-06 08:20:00'),(7,4,2,4,'Quản lý thường order món này cho nhân viên, ai cũng thích.','2026-03-06 09:15:00'),(8,5,3,5,'Matcha pha chuẩn, màu đẹp vị đậm.','2026-03-06 10:30:00'),(9,6,4,4,'Trà sữa khoai lang lạ miệng, béo mịn.','2026-03-06 11:00:00'),(10,7,5,5,'Trà sữa socola đậm đà, con nhỏ rất thích.','2026-03-06 14:00:00'),(11,1,6,5,'Cà phê sữa đá đúng vị phin, sáng nào cũng uống.','2026-03-07 07:30:00'),(12,2,7,4,'Bạc xỉu ngọt vừa, hợp người không quen đắng.','2026-03-07 08:45:00'),(13,3,8,5,'Cà phê đen đá tỉnh táo, nhân viên order hay gọi.','2026-03-07 10:00:00'),(14,4,9,5,'Chanh muối giải nhiệt, mùa hè uống rất đã.','2026-03-07 11:20:00'),(15,5,10,4,'Nước cam ép tươi, vitamin C đầy đủ.','2026-03-07 13:00:00'),(16,6,11,5,'Sinh tố dứa chua mát, rất hợp trưa nắng.','2026-03-07 14:30:00'),(17,7,12,5,'Sinh tố bơ béo ngậy, bữa sáng no lâu.','2026-03-07 16:00:00'),(18,1,13,4,'Sữa trân châu đường đen đúng trend, giới trẻ thích.','2026-03-08 09:00:00'),(19,2,14,5,'Trà sữa phô mai nướng đặc sản quán, ai đến cũng gọi.','2026-03-08 10:15:00'),(20,3,15,5,'Kem trứng cháy béo thơm, ăn kèm trà sữa tuyệt.','2026-03-08 11:30:00'),(21,4,1,5,'Trà Thái xanh bán chạy nhất quán.','2026-03-08 12:00:00'),(22,5,6,4,'Cà phê sữa đá phục vụ nhanh, chất lượng ổn định.','2026-03-08 13:45:00'),(23,6,9,5,'Chanh muối mát lạnh, khách về nóng hay ghé mua.','2026-03-08 15:00:00'),(24,7,14,4,'Phô mai nướng hơi ngọt nhưng vẫn ngon.','2026-03-08 16:20:00'),(25,1,4,4,'Khoai lang tím béo, hợp khẩu vị người lớn.','2026-03-08 17:00:00');
+/*!40000 ALTER TABLE `danh_gia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `binh_luan`
+--
+
+DROP TABLE IF EXISTS `binh_luan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `binh_luan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `MaND` int NOT NULL,
+  `MaSP` int NOT NULL,
+  `NoiDung` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NgayTao` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `MaND` (`MaND`),
+  KEY `MaSP` (`MaSP`),
+  CONSTRAINT `binh_luan_ibfk_1` FOREIGN KEY (`MaND`) REFERENCES `nguoi_dung` (`MaND`) ON DELETE CASCADE,
+  CONSTRAINT `binh_luan_ibfk_2` FOREIGN KEY (`MaSP`) REFERENCES `san_pham` (`MaSP`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `binh_luan`
+--
+
+LOCK TABLES `binh_luan` WRITE;
+/*!40000 ALTER TABLE `binh_luan` DISABLE KEYS */;
+INSERT INTO `binh_luan` VALUES (1,7,1,'Mình order size L, uống vừa phải, không quá ngọt. Recommend!','2026-03-01 10:05:00'),(2,1,1,'Cửa hàng ship nhanh, trà sữa còn mát.','2026-03-02 12:00:00'),(3,2,1,'Lần sau sẽ thử thêm topping trân châu.','2026-03-03 09:30:00'),(4,7,2,'Trà Hồng Kông hợp với đá ít đường.','2026-03-04 15:00:00'),(5,3,1,'Khách hay hỏi món này, mình cũng thích uống.','2026-03-06 08:25:00'),(6,4,2,'Thu ngân recommend món này cho khách mới, feedback tốt.','2026-03-06 09:20:00'),(7,5,3,'Pha matcha đúng công thức là ra vị chuẩn như này.','2026-03-06 10:35:00'),(8,6,4,'Khoai lang tím nhập về tươi, trà sữa ra màu đẹp.','2026-03-06 11:05:00'),(9,7,5,'Cho thêm trân châu đen vào trà socola rất hợp.','2026-03-06 14:10:00'),(10,1,6,'Sáng order cà phê sữa đá mang đi, tiện.','2026-03-07 07:45:00'),(11,2,7,'Bạc xỉu ít đá uống lâu hơn.','2026-03-07 08:50:00'),(12,3,8,'Cà phê đen không đường đúng gu mình.','2026-03-07 10:05:00'),(13,4,9,'Chanh muối order cho cả văn phòng, ai cũng khen.','2026-03-07 11:25:00'),(14,5,10,'Cam ép không đường vẫn ngọt tự nhiên.','2026-03-07 13:10:00'),(15,6,11,'Sinh tố dứa nên uống lạnh mới ngon.','2026-03-07 14:35:00'),(16,7,12,'Sinh tố bơ no lắm, uống xong bỏ bữa trưa luôn.','2026-03-07 16:05:00'),(17,1,13,'Trân châu đường đen dẻo vừa, không cứng.','2026-03-08 09:10:00'),(18,2,14,'Phô mai nướng nên uống ngay khi còn nóng lớp trên.','2026-03-08 10:20:00'),(19,3,15,'Kem trứng cháy ngọt béo, hôm nào mệt uống cái là phê.','2026-03-08 11:35:00'),(20,7,3,'Matcha size L uống cả ngày không chán.','2026-03-08 16:25:00'),(21,1,14,'Quán làm phô mai nướng đúng kiểu Hàn, đã thử nhiều chỗ rồi.','2026-03-08 17:05:00');
+/*!40000 ALTER TABLE `binh_luan` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

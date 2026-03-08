@@ -19,10 +19,13 @@ public class LoginController {
     private DaoUser daoUser;
     
     @GetMapping("/login")
-    public String showLoginForm(HttpSession session) {
+    public String showLoginForm(HttpSession session, @RequestParam(name = "redirect", required = false) String redirectUrl) {
         // Nếu đã đăng nhập, chuyển hướng về trang chủ
         if (session != null && session.getAttribute("loggedInUser") != null) {
             return "redirect:/home";
+        }
+        if (session != null && redirectUrl != null && !redirectUrl.isEmpty()) {
+            session.setAttribute("targetUrl", redirectUrl.startsWith("/") ? redirectUrl : "/" + redirectUrl);
         }
         return "login";
     }
