@@ -14,26 +14,44 @@
     <jsp:include page="common/navbar.jsp"/>
 
     <div class="container py-4">
-        <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Quản lý đơn hàng</h2>
+        <c:choose>
+            <c:when test="${showAllTabs}">
+                <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Quản lý đơn hàng</h2>
+            </c:when>
+            <c:when test="${tab == 'confirm'}">
+                <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Đơn chờ xác nhận</h2>
+            </c:when>
+            <c:when test="${tab == 'brewing'}">
+                <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Đơn cần pha chế</h2>
+            </c:when>
+            <c:when test="${tab == 'payment'}">
+                <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Đơn chờ thanh toán</h2>
+            </c:when>
+            <c:otherwise>
+                <h2 class="mb-4"><i class="fas fa-clipboard-list me-2"></i>Đơn đã hoàn thành</h2>
+            </c:otherwise>
+        </c:choose>
 
         <c:if test="${not empty success}">
             <div class="alert alert-success">${success}</div>
         </c:if>
 
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link ${tab == 'confirm' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=confirm">Chờ xác nhận</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link ${tab == 'brewing' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=brewing">Đang pha chế</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link ${tab == 'payment' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=payment">Chờ thanh toán</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link ${tab == 'done' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=done">Đã hoàn thành</a>
-            </li>
-        </ul>
+        <c:if test="${showAllTabs}">
+            <ul class="nav nav-tabs mb-4">
+                <li class="nav-item">
+                    <a class="nav-link ${tab == 'confirm' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=confirm">Chờ xác nhận</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ${tab == 'brewing' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=brewing">Đang pha chế</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ${tab == 'payment' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=payment">Chờ thanh toán</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ${tab == 'done' ? 'active' : ''}" href="${pageContext.request.contextPath}/order/list?tab=done">Đã hoàn thành</a>
+                </li>
+            </ul>
+        </c:if>
 
         <c:choose>
             <c:when test="${empty orders}">

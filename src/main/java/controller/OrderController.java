@@ -57,16 +57,31 @@ public class OrderController {
     public String list(@RequestParam(name = "tab", defaultValue = "confirm") String tab,
                       HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
+        String role = user != null && user.getTenQuyen() != null ? user.getTenQuyen().toLowerCase() : "";
+        boolean showAllTabs = "quản lý".equals(role) || "chủ quán".equals(role);
+
+        if (!showAllTabs) {
+            if ("nhân viên order".equals(role)) {
+                tab = "confirm";
+            } else if ("nhân viên pha chế".equals(role)) {
+                tab = "brewing";
+            } else if ("nhân viên thu ngân".equals(role)) {
+                tab = "payment";
+            }
+        }
+
         int status = 0;
         if ("brewing".equals(tab)) status = 1;
         else if ("payment".equals(tab)) status = 2;
         else if ("done".equals(tab)) status = 3;
+
         List<DonHang> orders = daoDonHang.findByStatus(status);
         for (DonHang dh : orders) {
             dh.setChiTiet(daoChiTietDonHang.findByDonHang(dh.getId()));
         }
         model.addAttribute("orders", orders);
         model.addAttribute("tab", tab);
+        model.addAttribute("showAllTabs", showAllTabs);
         model.addAttribute("permission", user != null ? user.getTenQuyen() : "");
         return "order_list";
     }
@@ -75,20 +90,20 @@ public class OrderController {
     public String confirm(@PathVariable int id, RedirectAttributes ra) {
         daoDonHang.updateStatus(id, 1);
         ra.addFlashAttribute("success", "Đã xác nhận đơn #" + id);
-        return "redirect:/order/list?tab=confirm";
+        return "redirect:/order/list";
     }
 
     @PostMapping("/brewed/{id}")
     public String brewed(@PathVariable int id, RedirectAttributes ra) {
         daoDonHang.updateStatus(id, 2);
         ra.addFlashAttribute("success", "Đã chuyển đơn #" + id + " cho thu ngân.");
-        return "redirect:/order/list?tab=brewing";
+        return "redirect:/order/list";
     }
 
     @PostMapping("/pay/{id}")
     public String pay(@PathVariable int id, RedirectAttributes ra) {
         daoDonHang.updateStatus(id, 3);
         ra.addFlashAttribute("success", "Đã thanh toán đơn #" + id);
-        return "redirect:/order/list?tab=payment";
+        return "redirect:/order/list";
     }
 }

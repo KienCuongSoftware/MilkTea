@@ -78,6 +78,13 @@ public class DaoDonHang {
         }
     }
 
+    /** Đếm số đơn theo status (dùng cho badge navbar). */
+    public int countByStatus(int status) {
+        String sql = "SELECT COUNT(*) FROM don_hang WHERE status = ?";
+        Integer n = jdbcTemplate.queryForObject(sql, Integer.class, status);
+        return n != null ? n : 0;
+    }
+
     /** Lấy đơn theo status. */
     public List<DonHang> findByStatus(int status) {
         String sql = "SELECT id, MaND, ten, diachi, sdt, ngaydat, voucher, tongTien, status, discount_amount, discount_type, discount_value FROM don_hang WHERE status = ? ORDER BY ngaydat DESC";

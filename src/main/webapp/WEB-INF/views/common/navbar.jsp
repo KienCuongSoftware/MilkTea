@@ -49,22 +49,40 @@
                     </c:if>
                     <c:if test="${permission == 'nhân viên order'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=confirm">
-                                <i class="fas fa-clipboard-list"></i> Đơn hàng
+                            <a class="nav-link d-inline-flex align-items-center" href="${pageContext.request.contextPath}/order/list?tab=confirm">
+                                <span class="position-relative">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <c:if test="${orderCountConfirm != null && orderCountConfirm > 0}">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; min-width: 1.1em;"><c:out value="${orderCountConfirm}"/></span>
+                                    </c:if>
+                                </span>
+                                <span class="ms-1">Đơn hàng</span>
                             </a>
                         </li>
                     </c:if>
                     <c:if test="${permission == 'nhân viên thu ngân'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=payment">
-                                <i class="fas fa-cash-register"></i> Thu ngân
+                            <a class="nav-link d-inline-flex align-items-center" href="${pageContext.request.contextPath}/order/list?tab=payment">
+                                <span class="position-relative">
+                                    <i class="fas fa-cash-register"></i>
+                                    <c:if test="${orderCountPayment != null && orderCountPayment > 0}">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; min-width: 1.1em;"><c:out value="${orderCountPayment}"/></span>
+                                    </c:if>
+                                </span>
+                                <span class="ms-1">Thu ngân</span>
                             </a>
                         </li>
                     </c:if>
                     <c:if test="${permission == 'nhân viên pha chế'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=brewing">
-                                <i class="fas fa-blender"></i> Đơn cần pha
+                            <a class="nav-link d-inline-flex align-items-center" href="${pageContext.request.contextPath}/order/list?tab=brewing">
+                                <span class="position-relative">
+                                    <i class="fas fa-blender"></i>
+                                    <c:if test="${orderCountBrewing != null && orderCountBrewing > 0}">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; min-width: 1.1em;"><c:out value="${orderCountBrewing}"/></span>
+                                    </c:if>
+                                </span>
+                                <span class="ms-1">Đơn cần pha</span>
                             </a>
                         </li>
                     </c:if>
