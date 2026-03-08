@@ -70,6 +70,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/warehouse")) {
             return "nhân viên kho".equals(role) || "quản lý".equals(role) || "chủ quán".equals(role);
         }
+        if (path.startsWith("/order")) {
+            if (path.startsWith("/order/success/") || path.startsWith("/order/bill/")) {
+                return true;
+            }
+            return "nhân viên order".equals(role) || "nhân viên pha chế".equals(role)
+                || "nhân viên thu ngân".equals(role) || "quản lý".equals(role) || "chủ quán".equals(role);
+        }
         return true;
     }
 

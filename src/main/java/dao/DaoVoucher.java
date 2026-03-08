@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,21 @@ public class DaoVoucher {
     public List<Voucher> findAll() {
         String sql = "SELECT id, ma, ten, mota, ngaybatdau, ngayketthuc, phantramgiamgia, giatrigiamgia FROM voucher ORDER BY ngayketthuc DESC";
         return jdbcTemplate.query(sql, ROW_MAPPER);
+    }
+
+    /** Tìm voucher theo mã, trả về null nếu không tồn tại hoặc hết hạn. */
+    public Voucher findByMa(String ma) {
+        if (ma == null || ma.trim().isEmpty()) return null;
+        String sql = "SELECT id, ma, ten, mota, ngaybatdau, ngayketthuc, phantramgiamgia, giatrigiamgia FROM voucher WHERE ma = ?";
+        try {
+            Voucher v = jdbcTemplate.queryForObject(sql, ROW_MAPPER, ma.trim());
+            if (v == null) return null;
+            Date now = new Date();
+            if (v.getNgayBatDau() != null && now.before(v.getNgayBatDau())) return null;
+            if (v.getNgayKetThuc() != null && now.after(v.getNgayKetThuc())) return null;
+            return v;
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }

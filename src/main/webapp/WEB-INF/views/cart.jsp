@@ -75,14 +75,126 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="cart-card d-flex justify-content-between align-items-center">
-                    <span class="cart-total">Tổng cộng: <fmt:formatNumber value="${tong}" type="currency" currencySymbol="đ"/></span>
-                    <span class="text-muted small">Thanh toán sẽ được thêm sau khi có chức năng đặt hàng.</span>
+                <div class="cart-card mb-3" id="cartSummary" data-total="${tong}">
+                    <h5 class="mb-3">Tổng đơn hàng</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tổng tạm tính:</span>
+                        <span id="subtotalText"><fmt:formatNumber value="${tong}" type="currency" currencySymbol="đ"/></span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                        <label class="form-label mb-0 me-2">Mã giảm giá:</label>
+                        <input type="text" id="voucherInput" class="form-control form-control-sm" style="max-width:180px" placeholder="VD: NEWCUST10" name="voucher">
+                        <button type="button" id="btnApplyVoucher" class="btn btn-outline-primary btn-sm">Áp dụng</button>
+                        <span id="voucherMessage" class="small text-success"></span>
+                        <span id="voucherError" class="small text-danger"></span>
+                    </div>
+                    <div id="discountRow" class="d-flex justify-content-between mb-2 d-none">
+                        <span class="text-success">Giảm giá:</span>
+                        <span id="discountText" class="text-success fw-bold">-0đ</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Tổng thanh toán:</span>
+                        <span id="totalAfterText" class="cart-total"><fmt:formatNumber value="${tong}" type="currency" currencySymbol="đ"/></span>
+                    </div>
+                </div>
+                <div class="cart-card">
+                    <h5 class="mb-3">Thông tin giao hàng / thanh toán</h5>
+                    <form action="${pageContext.request.contextPath}/cart/checkout" method="post" id="checkoutForm">
+                        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Họ tên <span class="text-danger">*</span></label>
+                                <input type="text" name="ten" class="form-control" required value="${loggedInUser.hoTen}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" name="sdt" class="form-control" required value="${loggedInUser.soDienThoai}">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Địa chỉ <span class="text-danger">*</span></label>
+                                <input type="text" name="diachi" class="form-control" required value="${loggedInUser.diaChi}">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-check me-2"></i>Thanh toán đơn hàng
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </c:otherwise>
         </c:choose>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    (function() {
+        var summary = document.getElementById('cartSummary');
+        if (!summary) return;
+        var total = parseFloat(summary.getAttribute('data-total')) || 0;
+        var voucherInput = document.getElementById('voucherInput');
+        var btnApply = document.getElementById('btnApplyVoucher');
+        var discountRow = document.getElementById('discountRow');
+        var discountText = document.getElementById('discountText');
+        var totalAfterText = document.getElementById('totalAfterText');
+        var voucherMessage = document.getElementById('voucherMessage');
+        var voucherError = document.getElementById('voucherError');
+
+        function formatVnd(n) {
+            if (isNaN(n)) return '0đ';
+            return new Intl.NumberFormat('vi-VN', { style: 'decimal', maximumFractionDigits: 0 }).format(n) + 'đ';
+        }
+
+        function resetVoucherUI() {
+            discountRow.classList.add('d-none');
+            totalAfterText.textContent = formatVnd(total);
+            voucherMessage.textContent = '';
+            voucherError.textContent = '';
+        }
+
+        if (btnApply) {
+            btnApply.addEventListener('click', function() {
+                var code = (voucherInput && voucherInput.value) ? voucherInput.value.trim() : '';
+                voucherMessage.textContent = '';
+                voucherError.textContent = '';
+                if (!code) {
+                    voucherError.textContent = 'Vui lòng nhập mã giảm giá.';
+                    resetVoucherUI();
+                    return;
+                }
+                var url = '${pageContext.request.contextPath}/cart/voucher/apply?code=' + encodeURIComponent(code) + '&total=' + total;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url);
+                xhr.onload = function() {
+                    if (xhr.status !== 200) {
+                        voucherError.textContent = 'Không thể kiểm tra mã.';
+                        resetVoucherUI();
+                        return;
+                    }
+                    try {
+                        var r = JSON.parse(xhr.responseText);
+                        if (r.valid) {
+                            voucherError.textContent = '';
+                            voucherMessage.textContent = r.message || '';
+                            discountText.textContent = '-' + formatVnd(r.discountAmount);
+                            discountRow.classList.remove('d-none');
+                            totalAfterText.textContent = formatVnd(r.totalAfter);
+                        } else {
+                            voucherMessage.textContent = '';
+                            voucherError.textContent = r.message || 'Mã không hợp lệ.';
+                            resetVoucherUI();
+                        }
+                    } catch (e) {
+                        voucherError.textContent = 'Lỗi xử lý.';
+                        resetVoucherUI();
+                    }
+                };
+                xhr.onerror = function() { voucherError.textContent = 'Lỗi kết nối.'; resetVoucherUI(); };
+                xhr.send();
+            });
+        }
+    })();
+    </script>
 </body>
 </html>

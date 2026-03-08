@@ -17,6 +17,9 @@
 
 USE `milktea`;
 
+-- Giải phóng lock nếu lần chạy trước bị giữ lại (tránh lỗi 1100 khi DROP TABLE)
+UNLOCK TABLES;
+
 --
 -- Table structure for table `chi_tiet_don_hang`
 --
@@ -28,7 +31,8 @@ CREATE TABLE `chi_tiet_don_hang` (
   `id` int NOT NULL AUTO_INCREMENT,
   `don_hang` int DEFAULT NULL,
   `san_pham` int DEFAULT NULL,
-  `size` int DEFAULT NULL,
+  `size` int DEFAULT 1,
+  `soLuong` int NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -39,7 +43,7 @@ CREATE TABLE `chi_tiet_don_hang` (
 
 LOCK TABLES `chi_tiet_don_hang` WRITE;
 /*!40000 ALTER TABLE `chi_tiet_don_hang` DISABLE KEYS */;
-INSERT INTO `chi_tiet_don_hang` VALUES (1,1,1,2),(2,2,3,1),(3,2,5,3),(4,3,4,1),(5,4,14,3),(6,5,13,2),(7,6,10,1),(8,7,1,2),(9,7,2,1),(10,8,3,3),(11,8,6,1),(12,9,4,2),(13,9,5,3),(14,10,14,1),(15,10,13,2),(16,11,15,3),(17,11,10,1),(18,12,1,2),(19,12,2,3),(20,13,3,1),(21,13,6,2),(22,14,4,3),(23,14,5,1),(24,15,14,2),(25,15,13,3),(26,16,15,1),(27,16,10,2),(28,17,1,3),(29,17,2,1),(30,18,3,2),(31,18,6,3),(32,19,4,1),(33,19,5,2),(34,20,14,3),(35,20,13,1),(36,21,15,2),(37,21,10,3),(38,22,1,1),(39,22,2,2),(40,23,3,3),(41,23,6,1),(42,24,4,2),(43,24,5,3),(44,25,14,1),(45,25,13,2),(46,26,15,3),(47,26,10,1);
+INSERT INTO `chi_tiet_don_hang` VALUES (1,1,1,2,1),(2,2,3,1,1),(3,2,5,3,1),(4,3,4,1,1),(5,4,14,3,1),(6,5,13,2,1),(7,6,10,1,1),(8,7,1,2,1),(9,7,2,1,1),(10,8,3,3,1),(11,8,6,1,1),(12,9,4,2,1),(13,9,5,3,1),(14,10,14,1,1),(15,10,13,2,1),(16,11,15,3,1),(17,11,10,1,1),(18,12,1,2,1),(19,12,2,3,1),(20,13,3,1,1),(21,13,6,2,1),(22,14,4,3,1),(23,14,5,1,1),(24,15,14,2,1),(25,15,13,3,1),(26,16,15,1,1),(27,16,10,2,1),(28,17,1,3,1),(29,17,2,1,1),(30,18,3,2,1),(31,18,6,3,1),(32,19,4,1,1),(33,19,5,2,1),(34,20,14,3,1),(35,20,13,1,1),(36,21,15,2,1),(37,21,10,3,1),(38,22,1,1,1),(39,22,2,2,1),(40,23,3,3,1),(41,23,6,1,1),(42,24,4,2,1),(43,24,5,3,1),(44,25,14,1,1),(45,25,13,2,1),(46,26,15,3,1),(47,26,10,1,1);
 /*!40000 ALTER TABLE `chi_tiet_don_hang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,13 +139,14 @@ DROP TABLE IF EXISTS `don_hang`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `don_hang` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `MaND` int DEFAULT NULL,
   `ten` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `diachi` text COLLATE utf8mb4_unicode_ci,
-  `sdt` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sdt` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ngaydat` datetime DEFAULT NULL,
   `voucher` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tongTien` decimal(10,0) DEFAULT NULL,
-  `status` int DEFAULT NULL,
+  `status` int DEFAULT 0 COMMENT '0=Chờ order, 1=Đã xác nhận, 2=Pha chế xong, 3=Đã thanh toán',
   `discount_amount` decimal(10,2) DEFAULT NULL,
   `discount_type` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `discount_value` decimal(10,2) DEFAULT NULL,
@@ -155,7 +160,7 @@ CREATE TABLE `don_hang` (
 
 LOCK TABLES `don_hang` WRITE;
 /*!40000 ALTER TABLE `don_hang` DISABLE KEYS */;
-INSERT INTO `don_hang` VALUES (1,'Nguyễn Thị Mai','123 Đường Láng, Đống Đa, Hà Nội','0987654321','2025-05-14 09:15:00','NEWCUST10',459000,1,NULL,NULL,NULL),(2,'Trần Văn An','456 Minh Khai, Hai Bà Trưng, Hà Nội','0912345678','2025-05-14 10:20:00',NULL,115000,0,NULL,NULL,NULL),(3,'Lê Hoàng','12A Nguyễn Trãi, Thanh Xuân, Hà Nội','0901122334','2025-05-13 18:40:00',NULL,49000,2,NULL,NULL,NULL),(4,'Phạm Quỳnh Trang','89 Phố Huế, Hoàn Kiếm, Hà Nội','0977888999','2025-05-14 14:05:00','VIP30',476000,1,NULL,NULL,NULL),(5,'Đỗ Minh Đức','27 Kim Mã, Ba Đình, Hà Nội','0988997766','2025-05-14 11:10:00',NULL,54000,0,NULL,NULL,NULL),(6,'Hoàng Anh','Số 9, Trần Duy Hưng, Cầu Giấy, Hà Nội','0966668888','2025-05-14 11:58:00',NULL,34000,0,NULL,NULL,NULL),(7,'Nguyễn Văn An','123 Đường Láng, Đống Đa, Hà Nội','0987654321','2025-05-15 08:30:00','NEWCUST10',135000,2,15000.00,'PERCENT',10.00),(8,'Trần Thị Bình','456 Minh Khai, Hai Bà Trưng, Hà Nội','0912345678','2025-05-15 09:15:00','SUMMER15',204000,2,36000.00,'PERCENT',15.00),(9,'Lê Văn Cường','789 Nguyễn Trãi, Thanh Xuân, Hà Nội','0901122334','2025-05-15 10:00:00','VIP30',245000,2,105000.00,'PERCENT',30.00),(10,'Phạm Thị Dung','321 Kim Mã, Ba Đình, Hà Nội','0977888999','2025-05-15 11:30:00','FLASH100K',180000,2,100000.00,'VALUE',100000.00),(11,'Hoàng Văn Em','654 Trần Duy Hưng, Cầu Giấy, Hà Nội','0988997766','2025-05-15 12:45:00','FLASH100K',150000,2,100000.00,'VALUE',100000.00),(12,'Đỗ Thị Phương','987 Phố Huế, Hoàn Kiếm, Hà Nội','0966668888','2025-05-15 13:20:00',NULL,115000,2,NULL,NULL,NULL),(13,'Nguyễn Văn Giang','147 Lê Văn Lương, Thanh Xuân, Hà Nội','0955557777','2025-05-15 14:10:00',NULL,95000,2,NULL,NULL,NULL),(14,'Trần Thị Hương','258 Đội Cấn, Ba Đình, Hà Nội','0944446666','2025-05-15 15:00:00',NULL,145000,2,NULL,NULL,NULL),(15,'Lê Văn Hùng','369 Nguyễn Khang, Cầu Giấy, Hà Nội','0933335555','2025-05-15 16:30:00',NULL,125000,2,NULL,NULL,NULL),(16,'Phạm Thị Khanh','741 Láng Hạ, Đống Đa, Hà Nội','0922224444','2025-05-15 17:15:00',NULL,165000,2,NULL,NULL,NULL),(17,'Hoàng Văn Long','852 Nguyễn Chí Thanh, Đống Đa, Hà Nội','0911113333','2025-05-15 18:00:00',NULL,135000,2,NULL,NULL,NULL),(18,'Đỗ Thị Mai','963 Đại Cồ Việt, Hai Bà Trưng, Hà Nội','0900002222','2025-05-15 19:30:00',NULL,155000,2,NULL,NULL,NULL),(19,'Nguyễn Văn Nam','159 Tây Sơn, Đống Đa, Hà Nội','0899991111','2025-05-15 20:15:00',NULL,175000,2,NULL,NULL,NULL),(20,'Trần Thị Oanh','357 Nguyễn Văn Cừ, Long Biên, Hà Nội','0888880000','2025-05-15 21:00:00',NULL,195000,2,NULL,NULL,NULL),(21,'Lê Văn Phúc','753 Nguyễn Văn Linh, Long Biên, Hà Nội','0877779999','2025-05-15 22:30:00',NULL,185000,2,NULL,NULL,NULL),(22,'Phạm Thị Quỳnh','951 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0866668888','2025-05-15 23:15:00',NULL,205000,2,NULL,NULL,NULL),(23,'Hoàng Văn Rạng','852 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0855557777','2025-05-16 00:00:00',NULL,215000,2,NULL,NULL,NULL),(24,'Đỗ Thị Sương','741 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0844446666','2025-05-16 01:30:00',NULL,225000,2,NULL,NULL,NULL),(25,'Nguyễn Văn Tú','963 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0833335555','2025-05-16 02:15:00',NULL,235000,2,NULL,NULL,NULL);
+INSERT INTO `don_hang` (`id`,`MaND`,`ten`,`diachi`,`sdt`,`ngaydat`,`voucher`,`tongTien`,`status`,`discount_amount`,`discount_type`,`discount_value`) VALUES (1,NULL,'Nguyễn Thị Mai','123 Đường Láng, Đống Đa, Hà Nội','0987654321','2025-05-14 09:15:00','NEWCUST10',459000,1,NULL,NULL,NULL),(2,NULL,'Trần Văn An','456 Minh Khai, Hai Bà Trưng, Hà Nội','0912345678','2025-05-14 10:20:00',NULL,115000,0,NULL,NULL,NULL),(3,NULL,'Lê Hoàng','12A Nguyễn Trãi, Thanh Xuân, Hà Nội','0901122334','2025-05-13 18:40:00',NULL,49000,2,NULL,NULL,NULL),(4,NULL,'Phạm Quỳnh Trang','89 Phố Huế, Hoàn Kiếm, Hà Nội','0977888999','2025-05-14 14:05:00','VIP30',476000,1,NULL,NULL,NULL),(5,NULL,'Đỗ Minh Đức','27 Kim Mã, Ba Đình, Hà Nội','0988997766','2025-05-14 11:10:00',NULL,54000,0,NULL,NULL,NULL),(6,NULL,'Hoàng Anh','Số 9, Trần Duy Hưng, Cầu Giấy, Hà Nội','0966668888','2025-05-14 11:58:00',NULL,34000,0,NULL,NULL,NULL),(7,NULL,'Nguyễn Văn An','123 Đường Láng, Đống Đa, Hà Nội','0987654321','2025-05-15 08:30:00','NEWCUST10',135000,2,15000.00,'PERCENT',10.00),(8,NULL,'Trần Thị Bình','456 Minh Khai, Hai Bà Trưng, Hà Nội','0912345678','2025-05-15 09:15:00','SUMMER15',204000,2,36000.00,'PERCENT',15.00),(9,NULL,'Lê Văn Cường','789 Nguyễn Trãi, Thanh Xuân, Hà Nội','0901122334','2025-05-15 10:00:00','VIP30',245000,2,105000.00,'PERCENT',30.00),(10,NULL,'Phạm Thị Dung','321 Kim Mã, Ba Đình, Hà Nội','0977888999','2025-05-15 11:30:00','FLASH100K',180000,2,100000.00,'VALUE',100000.00),(11,NULL,'Hoàng Văn Em','654 Trần Duy Hưng, Cầu Giấy, Hà Nội','0988997766','2025-05-15 12:45:00','FLASH100K',150000,2,100000.00,'VALUE',100000.00),(12,NULL,'Đỗ Thị Phương','987 Phố Huế, Hoàn Kiếm, Hà Nội','0966668888','2025-05-15 13:20:00',NULL,115000,2,NULL,NULL,NULL),(13,NULL,'Nguyễn Văn Giang','147 Lê Văn Lương, Thanh Xuân, Hà Nội','0955557777','2025-05-15 14:10:00',NULL,95000,2,NULL,NULL,NULL),(14,NULL,'Trần Thị Hương','258 Đội Cấn, Ba Đình, Hà Nội','0944446666','2025-05-15 15:00:00',NULL,145000,2,NULL,NULL,NULL),(15,NULL,'Lê Văn Hùng','369 Nguyễn Khang, Cầu Giấy, Hà Nội','0933335555','2025-05-15 16:30:00',NULL,125000,2,NULL,NULL,NULL),(16,NULL,'Phạm Thị Khanh','741 Láng Hạ, Đống Đa, Hà Nội','0922224444','2025-05-15 17:15:00',NULL,165000,2,NULL,NULL,NULL),(17,NULL,'Hoàng Văn Long','852 Nguyễn Chí Thanh, Đống Đa, Hà Nội','0911113333','2025-05-15 18:00:00',NULL,135000,2,NULL,NULL,NULL),(18,NULL,'Đỗ Thị Mai','963 Đại Cồ Việt, Hai Bà Trưng, Hà Nội','0900002222','2025-05-15 19:30:00',NULL,155000,2,NULL,NULL,NULL),(19,NULL,'Nguyễn Văn Nam','159 Tây Sơn, Đống Đa, Hà Nội','0899991111','2025-05-15 20:15:00',NULL,175000,2,NULL,NULL,NULL),(20,NULL,'Trần Thị Oanh','357 Nguyễn Văn Cừ, Long Biên, Hà Nội','0888880000','2025-05-15 21:00:00',NULL,195000,2,NULL,NULL,NULL),(21,NULL,'Lê Văn Phúc','753 Nguyễn Văn Linh, Long Biên, Hà Nội','0877779999','2025-05-15 22:30:00',NULL,185000,2,NULL,NULL,NULL),(22,NULL,'Phạm Thị Quỳnh','951 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0866668888','2025-05-15 23:15:00',NULL,205000,2,NULL,NULL,NULL),(23,NULL,'Hoàng Văn Rạng','852 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0855557777','2025-05-16 00:00:00',NULL,215000,2,NULL,NULL,NULL),(24,NULL,'Đỗ Thị Sương','741 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0844446666','2025-05-16 01:30:00',NULL,225000,2,NULL,NULL,NULL),(25,NULL,'Nguyễn Văn Tú','963 Nguyễn Văn Huyên, Cầu Giấy, Hà Nội','0833335555','2025-05-16 02:15:00',NULL,235000,2,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `don_hang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,7 +394,7 @@ CREATE TABLE `voucher` (
 
 LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
-INSERT INTO `voucher` VALUES (1,'NEWCUST10','Giảm 10% cho khách mới','Chương trình khuyến mãi dành cho khách hàng đăng ký lần đầu','2025-05-01 00:00:00','2025-06-01 23:59:59',10,NULL),(2,'SUMMER15','Ưu đãi hè 15%','Giảm giá toàn bộ đơn hàng vào tháng 6','2025-06-01 00:00:00','2025-06-30 23:59:59',15,NULL),(3,'VIP30','Voucher VIP giảm 30%','Chỉ áp dụng cho khách hàng VIP hạng Vàng trở lên','2025-05-10 00:00:00','2025-07-10 23:59:59',30,NULL),(4,'FLASH100K','Flash Sale giảm 100K','Giảm ngay 100.000đ cho 100 đơn đầu tiên mỗi ngày','2025-05-14 00:00:00','2025-05-20 23:59:59',NULL,100000),(5,'TETSALE','Tết Rộn Ràng – Giảm 20%','Áp dụng cho tất cả đơn hàng từ 20/01 đến 30/01','2025-01-20 00:00:00','2025-01-30 23:59:59',20,NULL);
+INSERT INTO `voucher` VALUES (1,'NEWCUST10','Giảm 10% cho khách mới','Chương trình khuyến mãi dành cho khách hàng đăng ký lần đầu','2026-01-01 00:00:00','2026-12-31 23:59:59',10,NULL),(2,'SUMMER15','Ưu đãi hè 15%','Giảm giá toàn bộ đơn hàng vào tháng 6','2026-06-01 00:00:00','2026-06-30 23:59:59',15,NULL),(3,'VIP30','Voucher VIP giảm 30%','Chỉ áp dụng cho khách hàng VIP hạng Vàng trở lên','2026-03-01 00:00:00','2026-08-31 23:59:59',30,NULL),(4,'FLASH100K','Flash Sale giảm 100K','Giảm ngay 100.000đ cho 100 đơn đầu tiên mỗi ngày','2026-05-01 00:00:00','2026-05-31 23:59:59',NULL,100000),(5,'TETSALE','Tết Rộn Ràng – Giảm 20%','Áp dụng cho tất cả đơn hàng từ 20/01 đến 30/01','2026-01-20 00:00:00','2026-01-30 23:59:59',20,NULL);
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -457,6 +462,9 @@ INSERT INTO `binh_luan` VALUES (1,7,1,'Mình order size L, uống vừa phải, 
 UNLOCK TABLES;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+-- Bổ sung cột MaND cho đơn hàng (chạy thủ công nếu bảng đã tồn tại trước khi thêm cột)
+-- ALTER TABLE `don_hang` ADD COLUMN `MaND` int DEFAULT NULL COMMENT 'Khách hàng đặt' AFTER `id`;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

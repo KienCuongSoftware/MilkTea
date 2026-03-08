@@ -49,21 +49,21 @@
                     </c:if>
                     <c:if test="${permission == 'nhân viên order'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=confirm">
                                 <i class="fas fa-clipboard-list"></i> Đơn hàng
                             </a>
                         </li>
                     </c:if>
                     <c:if test="${permission == 'nhân viên thu ngân'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=payment">
                                 <i class="fas fa-cash-register"></i> Thu ngân
                             </a>
                         </li>
                     </c:if>
                     <c:if test="${permission == 'nhân viên pha chế'}">
                         <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/order/list?tab=brewing">
                                 <i class="fas fa-blender"></i> Đơn cần pha
                             </a>
                         </li>

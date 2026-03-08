@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<jsp:useBean id="now" class="java.util.Date"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,21 @@
             transition: transform 0.2s;
         }
         .voucher-card:hover { transform: translateY(-2px); }
+        .voucher-card.voucher-expired {
+            border-left-color: #adb5bd;
+            background: #f8f9fa;
+            opacity: 0.85;
+        }
+        .voucher-card.voucher-expired .voucher-code { color: #6c757d; }
+        .voucher-card.voucher-expired .discount-badge { color: #6c757d; }
+        .voucher-expired-badge {
+            background: #dc3545;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+        }
         .voucher-code { font-weight: 700; color: #0984e3; font-size: 1.1rem; }
         .discount-badge { font-weight: 600; color: #00b894; }
     </style>
@@ -40,24 +56,31 @@
             <c:otherwise>
                 <div class="row g-4">
                     <c:forEach items="${vouchers}" var="v">
+                        <c:set var="expired" value="${v.ngayKetThuc != null && v.ngayKetThuc lt now}"/>
                         <div class="col-md-6 col-lg-4">
-                            <div class="voucher-card p-4 h-100">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div class="voucher-card p-4 h-100 ${expired ? 'voucher-expired' : ''}">
+                                <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-1">
                                     <span class="voucher-code">${v.ma}</span>
-                                    <c:if test="${v.phanTramGiamGia != null}">
-                                        <span class="discount-badge">Giảm ${v.phanTramGiamGia}%</span>
-                                    </c:if>
-                                    <c:if test="${v.giaTriGiamGia != null}">
-                                        <span class="discount-badge">Giảm <fmt:formatNumber value="${v.giaTriGiamGia}" type="number"/>đ</span>
-                                    </c:if>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <c:if test="${expired}">
+                                            <span class="voucher-expired-badge">Hết hạn</span>
+                                        </c:if>
+                                        <c:if test="${v.phanTramGiamGia != null}">
+                                            <span class="discount-badge">Giảm ${v.phanTramGiamGia}%</span>
+                                        </c:if>
+                                        <c:if test="${v.giaTriGiamGia != null}">
+                                            <span class="discount-badge">Giảm <fmt:formatNumber value="${v.giaTriGiamGia}" type="number"/>đ</span>
+                                        </c:if>
+                                    </div>
                                 </div>
                                 <h6 class="mb-2">${v.ten}</h6>
                                 <c:if test="${not empty v.mota}">
                                     <p class="text-muted small mb-2">${v.mota}</p>
                                 </c:if>
-                                <div class="small text-secondary">
+                                <div class="small ${expired ? 'text-danger' : 'text-secondary'}">
                                     <i class="fas fa-calendar-alt me-1"></i>
                                     <fmt:formatDate value="${v.ngayBatDau}" pattern="dd/MM/yyyy"/> – <fmt:formatDate value="${v.ngayKetThuc}" pattern="dd/MM/yyyy"/>
+                                    <c:if test="${expired}"> (đã hết hạn)</c:if>
                                 </div>
                             </div>
                         </div>
