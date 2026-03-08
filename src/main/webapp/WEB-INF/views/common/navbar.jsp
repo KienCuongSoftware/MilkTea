@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0.8rem 1rem;">
     <div class="container">
         <a class="navbar-brand" href="${pageContext.request.contextPath}/" style="font-size: 1.5rem; font-weight: 600; color: #2d3436;">
@@ -11,12 +12,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <c:if test="${not empty loggedInUser}">
+                    <%-- Trang chủ + Sản phẩm: cho mọi role (order, thu ngân, pha chế, khách hàng dùng chung) --%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                            <i class="fas fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/product/view">
+                            <i class="fas fa-mug-hot"></i> Sản phẩm
+                        </a>
+                    </li>
                     <c:if test="${permission == 'quản lý' || permission == 'chủ quán'}">
-                        <li class="nav-item">
-                            <a class="nav-link" href="${pageContext.request.contextPath}/product/view">
-                                <i class="fas fa-box"></i> Quản lý sản phẩm
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/category/view">
                                 <i class="fas fa-folder"></i> Quản lý danh mục
@@ -37,6 +44,49 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/warehouse/view">
                                 <i class="fas fa-warehouse"></i> Quản lý kho
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:if test="${permission == 'nhân viên order'}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                                <i class="fas fa-clipboard-list"></i> Đơn hàng
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:if test="${permission == 'nhân viên thu ngân'}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                                <i class="fas fa-cash-register"></i> Thu ngân
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:if test="${permission == 'nhân viên pha chế'}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/home">
+                                <i class="fas fa-blender"></i> Đơn cần pha
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:if test="${permission == 'khách hàng'}">
+                        <c:set var="cartCount" value="0"/>
+                        <c:forEach items="${sessionScope.cart}" var="cartItem">
+                            <c:set var="cartCount" value="${cartCount + cartItem.soLuong}"/>
+                        </c:forEach>
+                        <li class="nav-item">
+                            <a class="nav-link d-inline-flex align-items-center" href="${pageContext.request.contextPath}/cart">
+                                <span class="position-relative">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <c:if test="${cartCount > 0}">
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; min-width: 1.1em;"><c:out value="${cartCount}"/></span>
+                                    </c:if>
+                                </span>
+                                <span class="ms-1">Giỏ hàng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/voucher/list">
+                                <i class="fas fa-tag"></i> Mã giảm giá
                             </a>
                         </li>
                     </c:if>

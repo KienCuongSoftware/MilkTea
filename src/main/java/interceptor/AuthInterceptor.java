@@ -50,7 +50,15 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private boolean hasPermission(String path, String role) {
-        if (path.startsWith("/product") || path.startsWith("/category") || path.startsWith("/supplier")) {
+        if (path.startsWith("/product")) {
+            // Khách hàng và mọi role được xem danh sách + chi tiết sản phẩm
+            if (path.equals("/product/view") || path.startsWith("/product/detail/")) {
+                return true;
+            }
+            // Thêm/sửa/xóa/tìm kiếm chỉ quản lý, chủ quán
+            return "quản lý".equals(role) || "chủ quán".equals(role);
+        }
+        if (path.startsWith("/category") || path.startsWith("/supplier")) {
             return "quản lý".equals(role) || "chủ quán".equals(role);
         }
         if (path.startsWith("/user")) {

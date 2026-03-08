@@ -254,6 +254,13 @@
                         </form>
                     </div>
                     </c:if>
+                    <c:if test="${(permission != 'quản lý' && permission != 'chủ quán') && product.soLuong > 0}">
+                        <div class="mt-4">
+                            <a href="${pageContext.request.contextPath}/cart/add/${product.maSP}?from=detail" class="btn btn-success">
+                                <i class="fas fa-shopping-cart me-1"></i> Thêm vào giỏ
+                            </a>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

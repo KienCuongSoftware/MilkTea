@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý sản phẩm - Milk Tea Shop</title>
+    <title>Danh sách sản phẩm - Milk Tea Shop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -146,6 +146,10 @@
             background: #d63031;
             color: white;
         }
+        .btn-buy {
+            background: #00b894;
+            color: white;
+        }
         .btn-action:hover {
             opacity: 0.9;
             color: white;
@@ -193,9 +197,11 @@
                         <i class="fas fa-search me-2"></i>Tìm kiếm
                     </button>
                 </form>
-                <a href="${pageContext.request.contextPath}/product/add" class="btn-add">
-                    <i class="fas fa-plus me-2"></i>Thêm sản phẩm mới
-                </a>
+                <c:if test="${permission == 'quản lý' || permission == 'chủ quán'}">
+                    <a href="${pageContext.request.contextPath}/product/add" class="btn-add">
+                        <i class="fas fa-plus me-2"></i>Thêm sản phẩm mới
+                    </a>
+                </c:if>
             </div>
 
             <div class="product-table">
@@ -241,16 +247,32 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/product/edit/${product.maSP}" 
-                                       class="btn-action btn-edit">
-                                        <i class="fas fa-edit me-1"></i>Sửa
-                                    </a>
-                                    <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
-                                        <button type="submit" class="btn-action btn-delete border-0 bg-transparent p-0">
-                                            <i class="fas fa-trash me-1"></i>Xóa
-                                        </button>
-                                    </form>
+                                    <c:choose>
+                                        <c:when test="${permission == 'quản lý' || permission == 'chủ quán'}">
+                                            <a href="${pageContext.request.contextPath}/product/edit/${product.maSP}" 
+                                               class="btn-action btn-edit">
+                                                <i class="fas fa-edit me-1"></i>Sửa
+                                            </a>
+                                            <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                                <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                                                <button type="submit" class="btn-action btn-delete border-0 bg-transparent p-0">
+                                                    <i class="fas fa-trash me-1"></i>Xóa
+                                                </button>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="d-flex flex-nowrap align-items-center gap-2">
+                                                <a href="${pageContext.request.contextPath}/product/detail/${product.maSP}" class="btn-action btn-edit">
+                                                    <i class="fas fa-eye me-1"></i>Xem
+                                                </a>
+                                                <c:if test="${product.soLuong > 0}">
+                                                    <a href="${pageContext.request.contextPath}/cart/add/${product.maSP}" class="btn-action btn-buy">
+                                                        <i class="fas fa-shopping-cart me-1"></i>Mua
+                                                    </a>
+                                                </c:if>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </c:forEach>
