@@ -66,7 +66,7 @@
                                     <td><fmt:formatNumber value="${item.thanhTien}" type="currency" currencySymbol="đ"/></td>
                                     <td>
                                         <a href="${pageContext.request.contextPath}/cart/remove/${item.maSP}" 
-                                           class="btn btn-sm btn-outline-danger" onclick="return confirm('Bỏ sản phẩm khỏi giỏ?');">
+                                           class="btn btn-sm btn-outline-danger delete-confirm-link" data-delete-message="Bỏ sản phẩm khỏi giỏ?">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
@@ -196,5 +196,6 @@
         }
     })();
     </script>
+    <jsp:include page="common/delete_modal.jsp"/>
 </body>
 </html>

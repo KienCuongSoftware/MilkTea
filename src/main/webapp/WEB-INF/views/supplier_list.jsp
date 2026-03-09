@@ -222,7 +222,7 @@
                                        class="btn-action btn-edit">
                                         <i class="fas fa-edit me-1"></i>Sửa
                                     </a>
-                                    <form action="${pageContext.request.contextPath}/supplier/delete/${supplier.code}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?');">
+                                    <form action="${pageContext.request.contextPath}/supplier/delete/${supplier.code}" method="post" class="d-inline delete-confirm-form" data-delete-message="Bạn có chắc chắn muốn xóa nhà cung cấp này?">
                                         <input type="hidden" name="csrfToken" value="${csrfToken}"/>
                                         <button type="submit" class="btn-action btn-delete border-0 bg-transparent p-0">
                                             <i class="fas fa-trash me-1"></i>Xóa
@@ -315,5 +315,6 @@
             `)
             .appendTo('head');
     </script>
+    <jsp:include page="common/delete_modal.jsp"/>
 </body>
 </html> 

@@ -44,6 +44,22 @@ body { background-color: var(--mt-offwhite) !important; color: var(--mt-brown-da
 .btn-action.btn-submit:hover,
 .btn-action.btn-edit:hover,
 .btn-buy:hover { background-color: var(--mt-white) !important; border-color: var(--mt-brown-dark) !important; color: var(--mt-brown-dark) !important; transform: none !important; }
+/* Nút Sửa (btn-edit) trong product list: không hover trắng, giữ xanh + chữ trắng */
+.product-table .btn-action.btn-edit,
+.product-table .btn-action.btn-edit:hover { background-color: #0984e3 !important; border-color: #0984e3 !important; color: #fff !important; }
+.product-table .btn-action.btn-edit:hover { background-color: #0773c5 !important; border-color: #0773c5 !important; }
+/* Nút Sửa trong danh mục: hover giữ xanh, không chuyển trắng */
+.category-table .btn-action.btn-edit,
+.category-table .btn-action.btn-edit:hover { background-color: #0984e3 !important; border-color: #0984e3 !important; color: #fff !important; }
+.category-table .btn-action.btn-edit:hover { background-color: #0773c5 !important; border-color: #0773c5 !important; }
+
+/* Nút Tìm kiếm và Thêm sản phẩm: hover giữ nâu đậm, không chuyển trắng */
+.btn-search,
+.btn-search:hover,
+.btn-add,
+.btn-add:hover { background-color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; }
+.btn-search:hover,
+.btn-add:hover { background-color: var(--mt-brown) !important; border-color: var(--mt-brown) !important; }
 
 .btn-outline-primary { color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; transition: background-color 0.1s ease, color 0.1s ease !important; }
 .btn-outline-primary:hover { background-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; border-color: var(--mt-brown-dark) !important; }

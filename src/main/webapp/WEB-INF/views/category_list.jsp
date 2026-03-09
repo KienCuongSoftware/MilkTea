@@ -5,6 +5,7 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
   <head>
     <meta charset="UTF-8" />
     <title>Quản lý danh mục - Milk Tea Shop</title>
+    <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -155,7 +156,7 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
 
         <c:choose>
           <c:when test="${not empty categories}">
-            <table class="table">
+            <table class="table category-table">
               <thead>
                 <tr>
                   <th>Mã danh mục</th>
@@ -169,15 +170,17 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
                     <td>${category.maDM}</td>
                     <td>${category.tenDM}</td>
                     <td>
-                      <a href="${pageContext.request.contextPath}/category/edit/${category.maDM}" class="btn btn-action btn-edit">
-                        <i class="fas fa-edit"></i>
-                      </a>
-                      <form action="${pageContext.request.contextPath}/category/delete/${category.maDM}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
-                        <input type="hidden" name="csrfToken" value="${csrfToken}"/>
-                        <button type="submit" class="btn btn-action btn-delete border-0 bg-transparent p-0">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
+                      <div class="d-flex flex-nowrap align-items-center gap-2">
+                        <a href="${pageContext.request.contextPath}/category/edit/${category.maDM}" class="btn btn-action btn-edit btn-sm">
+                          <i class="fas fa-edit me-1"></i>Sửa
+                        </a>
+                        <form action="${pageContext.request.contextPath}/category/delete/${category.maDM}" method="post" class="d-inline delete-confirm-form" data-delete-message="Bạn có chắc chắn muốn xóa danh mục này?">
+                          <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                          <button type="submit" class="btn btn-action btn-delete btn-sm">
+                            <i class="fas fa-trash me-1"></i>Xóa
+                          </button>
+                        </form>
+                      </div>
                     </td>
                   </tr>
                 </c:forEach>
@@ -196,5 +199,6 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <jsp:include page="common/delete_modal.jsp"/>
   </body>
 </html>

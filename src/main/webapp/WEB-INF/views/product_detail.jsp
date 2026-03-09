@@ -246,7 +246,7 @@
                            class="btn btn-warning ms-2">
                             <i class="fas fa-pencil-alt me-1"></i> Sửa sản phẩm
                         </a>
-                        <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline ms-2" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                        <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline ms-2 delete-confirm-form" data-delete-message="Bạn có chắc muốn xóa sản phẩm này?">
                             <input type="hidden" name="csrfToken" value="${csrfToken}"/>
                             <button type="submit" class="btn btn-danger">
                                 <i class="fas fa-trash me-1"></i> Xóa
@@ -304,7 +304,7 @@
                                 <i class="fas fa-save me-1"></i> Lưu thay đổi
                             </button>
                             <c:if test="${not empty detail.maCTSP}">
-                                <form action="${pageContext.request.contextPath}/product/detail/delete/${product.maSP}" method="post" class="d-inline ms-2" onsubmit="return confirm('Bạn có chắc muốn xóa chi tiết sản phẩm này?');">
+                                <form action="${pageContext.request.contextPath}/product/detail/delete/${product.maSP}" method="post" class="d-inline ms-2 delete-confirm-form" data-delete-message="Bạn có chắc muốn xóa chi tiết sản phẩm này?">
                                     <input type="hidden" name="csrfToken" value="${csrfToken}"/>
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-trash me-1"></i> Xóa chi tiết
@@ -408,5 +408,6 @@
     <script>
     document.querySelectorAll('.rating-bar-fill[data-width]').forEach(function(el){ el.style.width = (el.getAttribute('data-width') || 0) + '%'; });
     </script>
+    <jsp:include page="common/delete_modal.jsp"/>
 </body>
 </html> 

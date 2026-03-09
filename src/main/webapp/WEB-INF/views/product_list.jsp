@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Danh sách sản phẩm - Milk Tea Shop</title>
+    <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -140,6 +141,10 @@
             color: white;
             margin-right: 0.5rem;
         }
+        .product-table .btn-edit:hover {
+            background-color: #fff !important;
+            color: #3E2723 !important;
+        }
         .btn-delete {
             background: #d63031;
             color: white;
@@ -261,7 +266,7 @@
                                                    class="btn btn-sm btn-action btn-edit">
                                                     <i class="fas fa-edit me-1"></i>Sửa
                                                 </a>
-                                                <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                                <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline delete-confirm-form" data-delete-message="Bạn có chắc chắn muốn xóa sản phẩm này?">
                                                     <input type="hidden" name="csrfToken" value="${csrfToken}"/>
                                                     <button type="submit" class="btn btn-sm btn-danger">
                                                         <i class="fas fa-trash me-1"></i>Xóa
@@ -291,6 +296,7 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let isLoading = false;
@@ -369,5 +375,6 @@
             `)
             .appendTo('head');
     </script>
+    <jsp:include page="common/delete_modal.jsp"/>
 </body>
 </html> 
