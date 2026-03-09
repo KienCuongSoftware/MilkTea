@@ -77,28 +77,33 @@ prefix="c" %>
         position: relative;
         border-radius: 12px;
         overflow: hidden;
+        border: 1px solid #dfe6e9;
+        background: #fff;
+      }
+      .input-group:focus-within {
+        border-color: #5D4037;
+        box-shadow: 0 0 0 0.25rem rgba(93, 64, 55, 0.25);
       }
       .input-group-text {
         background: transparent;
-        border: 1px solid #dfe6e9;
-        border-right: none;
+        border: none;
         color: #636e72;
-        border-radius: 12px 0 0 12px;
       }
       .login-container .form-control {
-        border-left: none;
+        border: none;
         padding-right: 40px;
         border-radius: 0;
+        background: #fff;
+      }
+      .login-container .form-control:focus {
+        border: none;
+        box-shadow: none;
       }
       .login-container .input-group .form-control:last-child {
-        border-radius: 0 12px 12px 0;
+        border-radius: 0;
       }
       .login-container .password-toggle {
-        border-radius: 0 12px 12px 0;
-      }
-      .form-control:focus {
-        border-color: #5D4037;
-        box-shadow: 0 0 0 0.25rem rgba(93, 64, 55, 0.25);
+        border-radius: 0;
       }
       .password-toggle {
         position: absolute;

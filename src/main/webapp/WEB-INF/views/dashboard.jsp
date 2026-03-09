@@ -12,20 +12,54 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/theme.css" rel="stylesheet">
     <style>
-        :root { --card-radius: 14px; --card-shadow: 0 4px 14px rgba(93,64,55,0.08); --card-hover: 0 8px 24px rgba(93,64,55,0.12); }
+        :root {
+            --card-radius: 14px;
+            --card-shadow: 0 4px 16px rgba(93,64,55,0.08);
+            --card-hover-shadow: 0 6px 20px rgba(93,64,55,0.14);
+        }
         body { background: #FAF6F0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        .dashboard-header { background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%); color: #FFF8E7; border-radius: var(--card-radius); padding: 1.5rem 1.75rem; margin-bottom: 1.75rem; box-shadow: var(--card-shadow); }
-        .dashboard-header h2 { margin: 0; font-weight: 700; font-size: 1.6rem; }
-        .stat-card { border: none; border-radius: var(--card-radius); box-shadow: var(--card-shadow); transition: transform 0.2s, box-shadow 0.2s; overflow: hidden; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--card-hover); }
-        .stat-card .card-body { padding: 1.35rem; }
+        .dashboard-header {
+            background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%);
+            color: #FFF8E7;
+            border-radius: var(--card-radius);
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .dashboard-header h2 { margin: 0; font-weight: 700; font-size: 1.65rem; letter-spacing: -0.02em; }
+        .dashboard-header p { opacity: 0.9; }
+        .stat-card {
+            border: none;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            transition: box-shadow 0.2s ease;
+            overflow: hidden;
+            min-height: 130px;
+        }
+        .stat-card:hover {
+            box-shadow: var(--card-hover-shadow);
+        }
+        .stat-card .card-body { padding: 1.4rem; }
+        .row.g-3 .col-md-4 .stat-card { height: 100%; min-height: 130px; }
         .stat-card .stat-value { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
         .stat-card .stat-label { font-size: 0.85rem; opacity: 0.9; }
-        .chart-card { border: none; border-radius: var(--card-radius); box-shadow: var(--card-shadow); background: #fff; }
+        .stat-card a { text-decoration: none; opacity: 0.95; transition: opacity 0.15s ease; }
+        .stat-card a:hover { opacity: 1; text-decoration: underline; }
+        .chart-card {
+            border: none;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            background: #fff;
+            transition: box-shadow 0.2s ease;
+        }
+        .chart-card:hover { box-shadow: var(--card-hover-shadow); }
         .chart-card .card-body { padding: 1.5rem; }
-        .chart-card .card-title { font-weight: 600; color: #3E2723; margin-bottom: 1rem; }
+        .chart-card .card-title { font-weight: 600; color: #3E2723; margin-bottom: 1rem; font-size: 1.05rem; }
+        .chart-card .chart-wrap { min-height: 220px; display: flex; align-items: center; }
+        .chart-card .chart-wrap canvas { max-width: 100% !important; }
         .table-dash { border-radius: var(--card-radius); overflow: hidden; box-shadow: var(--card-shadow); }
-        .table-dash thead th { background: #5D4037; color: #FFF8E7; font-weight: 600; border: none; padding: 0.85rem 1rem; }
+        .table-dash thead th { background: #5D4037; color: #FFF8E7; font-weight: 600; border: none; padding: 0.9rem 1rem; }
+        .table-dash tbody tr { transition: background 0.15s ease; }
         .table-dash tbody tr:hover { background: #FFF8E7; }
         .section-title { font-weight: 600; color: #3E2723; margin-bottom: 1rem; font-size: 1.05rem; }
     </style>
@@ -44,7 +78,7 @@
             <c:when test="${dashboardRole == 'admin'}">
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-primary text-white">
+                        <div class="card stat-card border-0 bg-primary text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -58,7 +92,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-info text-white">
+                        <div class="card stat-card border-0 bg-info text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -72,7 +106,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-warning text-dark">
+                        <div class="card stat-card border-0 bg-warning text-dark h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -86,7 +120,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-success text-white">
+                        <div class="card stat-card border-0 bg-success text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -100,7 +134,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-dark text-white">
+                        <div class="card stat-card border-0 bg-dark text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -113,7 +147,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-secondary text-white">
+                        <div class="card stat-card border-0 bg-secondary text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -127,21 +161,25 @@
                         </div>
                     </div>
                 </div>
-                <%-- Biểu đồ: Doanh thu + Đơn hoàn thành --%>
+                <%-- Biểu đồ: Doanh thu + Đơn hoàn thành (cùng kích thước) --%>
                 <div class="row g-4 mb-4">
-                    <div class="col-lg-7">
-                        <div class="chart-card card">
-                            <div class="card-body">
+                    <div class="col-lg-6">
+                        <div class="chart-card card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><i class="fas fa-chart-line me-2 text-primary"></i>Doanh thu 7 ngày gần nhất (đã thanh toán)</h5>
-                                <canvas id="chartRevenue" height="180"></canvas>
+                                <div class="chart-wrap flex-grow-1">
+                                    <canvas id="chartRevenue" height="180"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
-                        <div class="chart-card card">
-                            <div class="card-body">
+                    <div class="col-lg-6">
+                        <div class="chart-card card h-100">
+                            <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><i class="fas fa-chart-bar me-2 text-success"></i>Đơn hoàn thành 7 ngày gần nhất</h5>
-                                <canvas id="chartCompleted" height="180"></canvas>
+                                <div class="chart-wrap flex-grow-1">
+                                    <canvas id="chartCompleted" height="180"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,7 +190,7 @@
             <c:when test="${dashboardRole == 'warehouse'}">
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <div class="card stat-card border-0 bg-primary text-white">
+                        <div class="card stat-card border-0 bg-primary text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -166,7 +204,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card stat-card border-0 ${lowStockCount > 0 ? 'bg-danger' : 'bg-success'} text-white">
+                        <div class="card stat-card border-0 ${lowStockCount > 0 ? 'bg-danger' : 'bg-success'} text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -220,7 +258,7 @@
             <c:when test="${dashboardRole == 'cashier'}">
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-warning text-dark">
+                        <div class="card stat-card border-0 bg-warning text-dark h-100">
                             <div class="card-body">
                                 <div class="stat-label">Đơn chờ thanh toán</div>
                                 <span class="stat-value">${fn:length(orders)}</span> đơn
@@ -279,7 +317,7 @@
             <c:when test="${dashboardRole == 'brewing'}">
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-info text-white">
+                        <div class="card stat-card border-0 bg-info text-white h-100">
                             <div class="card-body">
                                 <div class="stat-label">Đơn cần pha chế</div>
                                 <span class="stat-value">${fn:length(orders)}</span> đơn
@@ -338,7 +376,7 @@
             <c:when test="${dashboardRole == 'order'}">
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
-                        <div class="card stat-card border-0 bg-primary text-white">
+                        <div class="card stat-card border-0 bg-primary text-white h-100">
                             <div class="card-body">
                                 <div class="stat-label">Đơn chờ xác nhận</div>
                                 <span class="stat-value">${fn:length(orders)}</span> đơn

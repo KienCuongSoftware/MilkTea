@@ -109,6 +109,8 @@ footer.text-light { color: var(--mt-cream) !important; }
 .stat-card.bg-warning .text-dark { color: var(--mt-cream) !important; }
 .stat-card.bg-success { background-color: var(--mt-brown-dark) !important; border-color: transparent !important; }
 .stat-card.bg-dark { background-color: var(--mt-brown-dark) !important; border-color: transparent !important; }
+.stat-card:hover,
+.chart-card:hover { transform: none !important; }
 .dashboard-header { background: linear-gradient(135deg, var(--mt-brown) 0%, var(--mt-brown-dark) 100%) !important; color: var(--mt-white) !important; }
 .dashboard-card, .card.shadow-sm { border-left: 4px solid var(--mt-brown) !important; }
 
