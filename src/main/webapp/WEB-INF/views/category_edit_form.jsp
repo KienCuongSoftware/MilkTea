@@ -79,7 +79,6 @@ prefix="c" %>
       }
       .btn-submit:hover {
         background: #00a38c;
-        transform: translateY(-1px);
       }
       .btn-cancel {
         background: #636e72;
@@ -90,7 +89,6 @@ prefix="c" %>
       .btn-cancel:hover {
         background: #576574;
         color: white;
-        transform: translateY(-1px);
       }
       .alert {
         border-radius: 8px;

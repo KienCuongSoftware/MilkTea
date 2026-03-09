@@ -70,7 +70,6 @@
         }
         .btn-search:hover {
             background: #0773c5;
-            transform: translateY(-1px);
         }
         .btn-add {
             background: #00b894;
@@ -85,7 +84,6 @@
         .btn-add:hover {
             background: #00a38c;
             color: white;
-            transform: translateY(-1px);
         }
         .product-table {
             background: white;
@@ -149,7 +147,6 @@
         .btn-action:hover {
             opacity: 0.9;
             color: white;
-            transform: translateY(-1px);
         }
         .status-badge {
             padding: 0.4rem 0.8rem;

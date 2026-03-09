@@ -75,16 +75,26 @@ prefix="c" %>
       .input-group {
         margin-bottom: 20px;
         position: relative;
+        border-radius: 12px;
+        overflow: hidden;
       }
       .input-group-text {
         background: transparent;
         border: 1px solid #dfe6e9;
         border-right: none;
         color: #636e72;
+        border-radius: 12px 0 0 12px;
       }
-      .form-control {
+      .login-container .form-control {
         border-left: none;
         padding-right: 40px;
+        border-radius: 0;
+      }
+      .login-container .input-group .form-control:last-child {
+        border-radius: 0 12px 12px 0;
+      }
+      .login-container .password-toggle {
+        border-radius: 0 12px 12px 0;
       }
       .form-control:focus {
         border-color: #5D4037;
@@ -107,19 +117,19 @@ prefix="c" %>
       }
       .btn-login {
         background: linear-gradient(120deg, #5D4037, #3E2723) !important;
-        border: none;
-        border-radius: 10px;
+        border: 1px solid #3E2723;
+        border-radius: 12px;
         color: white !important;
         padding: 12px;
         font-weight: 600;
         width: 100%;
         margin-top: 10px;
-        transition: all 0.3s ease;
+        transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease;
       }
       .btn-login:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(62, 39, 35, 0.4);
-        background: #3E2723 !important;
+        background: #fff !important;
+        color: #3E2723 !important;
+        border-color: #3E2723;
       }
       .alert {
         border-radius: 10px;
@@ -147,6 +157,9 @@ prefix="c" %>
       }
       .form-check {
         margin: 15px 0;
+      }
+      .form-check-input {
+        border-radius: 6px;
       }
       .form-check-input:checked {
         background-color: #5D4037;

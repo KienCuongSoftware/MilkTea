@@ -59,7 +59,6 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
       }
       .btn-add:hover {
         background: #00a38c;
-        transform: translateY(-1px);
         color: white;
       }
       .table {

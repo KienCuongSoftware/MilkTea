@@ -21,7 +21,7 @@ body { background-color: var(--mt-offwhite) !important; color: var(--mt-brown-da
 .navbar-toggler { border-color: var(--mt-border) !important; }
 .navbar-toggler-icon { filter: none; }
 
-/* Buttons - all main actions = dark brown */
+/* Buttons - all main actions = dark brown, hover = white, transition 0.1s */
 .btn-primary,
 .btn-success,
 .btn-info,
@@ -32,7 +32,7 @@ body { background-color: var(--mt-offwhite) !important; color: var(--mt-brown-da
 .btn-login,
 .btn-action.btn-submit,
 .btn-action.btn-edit,
-.btn-buy { background-color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; }
+.btn-buy { background-color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease !important; }
 .btn-primary:hover,
 .btn-success:hover,
 .btn-info:hover,
@@ -43,11 +43,11 @@ body { background-color: var(--mt-offwhite) !important; color: var(--mt-brown-da
 .btn-login:hover,
 .btn-action.btn-submit:hover,
 .btn-action.btn-edit:hover,
-.btn-buy:hover { background-color: var(--mt-brown) !important; border-color: var(--mt-brown) !important; color: var(--mt-white) !important; }
+.btn-buy:hover { background-color: var(--mt-white) !important; border-color: var(--mt-brown-dark) !important; color: var(--mt-brown-dark) !important; transform: none !important; }
 
-.btn-outline-primary { color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; }
+.btn-outline-primary { color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; transition: background-color 0.1s ease, color 0.1s ease !important; }
 .btn-outline-primary:hover { background-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; border-color: var(--mt-brown-dark) !important; }
-.btn-outline-secondary { color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; }
+.btn-outline-secondary { color: var(--mt-brown-dark) !important; border-color: var(--mt-brown-dark) !important; transition: background-color 0.1s ease, color 0.1s ease !important; }
 .btn-outline-secondary:hover { background-color: var(--mt-brown-dark) !important; color: var(--mt-white) !important; border-color: var(--mt-brown-dark) !important; }
 
 /* Links */
