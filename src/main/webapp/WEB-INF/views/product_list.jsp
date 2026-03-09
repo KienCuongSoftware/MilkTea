@@ -144,6 +144,16 @@
             background: #d63031;
             color: white;
         }
+        /* Sửa và Xóa cùng kích thước trong cột Thao tác */
+        .product-table .d-flex.gap-2 .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.2;
+        }
+        .product-table .d-flex.gap-2 a.btn {
+            display: inline-flex;
+            align-items: center;
+        }
         .btn-buy {
             background: #00b894;
             color: white;
@@ -246,16 +256,18 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${permission == 'quản lý' || permission == 'chủ quán'}">
-                                            <a href="${pageContext.request.contextPath}/product/edit/${product.maSP}" 
-                                               class="btn-action btn-edit">
-                                                <i class="fas fa-edit me-1"></i>Sửa
-                                            </a>
-                                            <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                                <input type="hidden" name="csrfToken" value="${csrfToken}"/>
-                                                <button type="submit" class="btn-action btn-delete border-0 bg-transparent p-0">
-                                                    <i class="fas fa-trash me-1"></i>Xóa
-                                                </button>
-                                            </form>
+                                            <div class="d-flex flex-nowrap align-items-center gap-2">
+                                                <a href="${pageContext.request.contextPath}/product/edit/${product.maSP}" 
+                                                   class="btn btn-sm btn-action btn-edit">
+                                                    <i class="fas fa-edit me-1"></i>Sửa
+                                                </a>
+                                                <form action="${pageContext.request.contextPath}/product/delete/${product.maSP}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                                    <input type="hidden" name="csrfToken" value="${csrfToken}"/>
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-trash me-1"></i>Xóa
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="d-flex flex-nowrap align-items-center gap-2">
