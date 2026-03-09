@@ -111,8 +111,8 @@
         }
         .search-input .form-control {
             width: 200px;
-            height: 38px;
-            border-radius: 4px;
+            height: 42px;
+            border-radius: 10px;
             padding: 8px 12px;
             border: 1px solid #ddd;
         }
@@ -123,18 +123,28 @@
             transform: translateY(-50%);
             color: #6c757d;
         }
+        .category-filter {
+            display: flex;
+            align-items: stretch;
+        }
         .category-filter .form-select {
-            width: 150px;
-            height: 38px;
-            border-radius: 4px;
-            padding: 8px 12px;
+            width: 180px;
+            height: 42px;
+            border-radius: 10px;
+            padding: 8px 2.25rem 8px 12px;
             border: 1px solid #ddd;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            line-height: 1.5;
         }
         .search-button {
-            height: 38px;
-            padding: 0 15px;
-            border-radius: 4px;
-            background-color: #0d6efd;
+            height: 42px;
+            padding: 0 18px;
+            border-radius: 10px;
+            background-color: #3E2723;
             border: none;
             color: white;
             display: flex;
@@ -143,7 +153,7 @@
             font-size: 14px;
         }
         .search-button:hover {
-            background-color: #0b5ed7;
+            background-color: #5D4037;
         }
         .product-grid {
             display: grid;
@@ -154,7 +164,7 @@
         }
         .product-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             height: 100%;
@@ -176,7 +186,7 @@
         .product-image {
             height: 200px;
             object-fit: cover;
-            border-radius: 12px 12px 0 0;
+            border-radius: 14px 14px 0 0;
             width: 100%;
         }
         .product-info {
@@ -223,18 +233,18 @@
             z-index: 1;
         }
         .btn-view-detail {
-            background-color: #0d6efd;
+            background-color: #3E2723;
             color: white;
             border: none;
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 10px;
             text-decoration: none;
             text-align: center;
             transition: background-color 0.3s;
             margin-top: auto;
         }
         .btn-view-detail:hover {
-            background-color: #0b5ed7;
+            background-color: #5D4037;
             color: white;
         }
         .navbar {
