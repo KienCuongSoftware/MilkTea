@@ -24,6 +24,11 @@ public class DaoChiTietDonHang {
         jdbcTemplate.update(INSERT, ct.getDonHang(), ct.getSanPham(), ct.getSize(), ct.getSoLuong());
     }
 
+    /** Gỡ tham chiếu sản phẩm khỏi chi tiết đơn hàng (trước khi xóa sản phẩm). */
+    public void nullOutSanPham(int maSP) {
+        jdbcTemplate.update("UPDATE chi_tiet_don_hang SET san_pham = NULL WHERE san_pham = ?", maSP);
+    }
+
     public List<ChiTietDonHang> findByDonHang(int donHangId) {
         String sql = "SELECT c.id, c.don_hang AS donHang, c.san_pham AS sanPham, c.size, c.soLuong, p.TenSP AS tenSP, p.DonGia AS donGia " +
                      "FROM chi_tiet_don_hang c JOIN san_pham p ON c.san_pham = p.MaSP WHERE c.don_hang = ? ORDER BY c.id";

@@ -53,6 +53,12 @@ public class DaoProduct {
         return jdbcTemplate.update(sql, maSP);
     }
 
+    /** Lấy danh sách MaSP thuộc một danh mục (để xóa cascade khi xóa danh mục). */
+    public List<Integer> getMaSPByMaDM(int maDM) {
+        String sql = "SELECT MaSP FROM SAN_PHAM WHERE MaDM = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("MaSP"), maDM);
+    }
+
     // Lấy sản phẩm theo ID
     public Product getProductById(int maSP) {
         String sql = "SELECT * FROM SAN_PHAM WHERE MaSP = ?";

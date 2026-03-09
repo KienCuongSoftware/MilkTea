@@ -174,7 +174,7 @@ pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix
                         <a href="${pageContext.request.contextPath}/category/edit/${category.maDM}" class="btn btn-action btn-edit btn-sm">
                           <i class="fas fa-edit me-1"></i>Sửa
                         </a>
-                        <form action="${pageContext.request.contextPath}/category/delete/${category.maDM}" method="post" class="d-inline delete-confirm-form" data-delete-message="Bạn có chắc chắn muốn xóa danh mục này?">
+                        <form action="${pageContext.request.contextPath}/category/delete/${category.maDM}" method="post" class="d-inline delete-confirm-form" data-delete-message="Bạn có chắc chắn muốn xóa danh mục này? Tất cả sản phẩm thuộc danh mục này cũng sẽ bị xóa.">
                           <input type="hidden" name="csrfToken" value="${csrfToken}"/>
                           <button type="submit" class="btn btn-action btn-delete btn-sm">
                             <i class="fas fa-trash me-1"></i>Xóa

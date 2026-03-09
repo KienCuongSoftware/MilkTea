@@ -10,6 +10,9 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import beans.Category;
 import dao.DaoCategory;
+import dao.DaoProduct;
+import dao.DaoProductDetail;
+import dao.DaoChiTietDonHang;
 
 @Controller
 @RequestMapping("/category")
@@ -17,6 +20,12 @@ public class CategoryController {
     
     @Autowired
     private DaoCategory daoCategory;
+    @Autowired
+    private DaoProduct daoProduct;
+    @Autowired
+    private DaoProductDetail daoProductDetail;
+    @Autowired
+    private DaoChiTietDonHang daoChiTietDonHang;
     
     @GetMapping("/view")
     public String viewCategories(Model model) {
@@ -108,12 +117,20 @@ public class CategoryController {
             return "redirect:/category/view";
         }
         try {
+            // Xóa cascade: trước khi xóa danh mục, xóa hết sản phẩm thuộc danh mục (và phụ thuộc)
+            List<Integer> productIds = daoProduct.getMaSPByMaDM(maDM);
+            for (Integer maSP : productIds) {
+                daoChiTietDonHang.nullOutSanPham(maSP);
+                daoProductDetail.delete(maSP);
+                daoProduct.delete(maSP);
+            }
             if (daoCategory.deleteCategory(maDM)) {
                 redirectAttributes.addFlashAttribute("success", "Xóa danh mục thành công!");
             } else {
                 redirectAttributes.addFlashAttribute("error", "Không thể xóa danh mục!");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
         }
         return "redirect:/category/view";
